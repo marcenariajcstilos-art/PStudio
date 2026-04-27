@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import streamlit.components.v1 as components
 
 # ==============================================================================
 # 1. CONFIGURAÇÃO DE AMBIENTE E ESTADO DO SISTEMA
@@ -11,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inicialização de variáveis de estado para navegação complexa
+# Inicialização de variáveis de estado para navegação no aplicativo (SPA)
 if 'page' not in st.session_state:
     st.session_state['page'] = 'Início'
 if 'projeto_selecionado' not in st.session_state:
@@ -45,7 +46,7 @@ def injetar_css_premium():
             color: var(--text-main) !important;
         }
 
-        /* CORREÇÃO DO MENU MOBILE: Deixa o header transparente em vez de oculto */
+        /* Correção para barra superior e ocultação de menus indesejados */
         header {background-color: transparent !important;}
         #MainMenu, footer {visibility: hidden;}
 
@@ -57,15 +58,16 @@ def injetar_css_premium():
             letter-spacing: 1px;
         }
 
-        /* --- CLASSES DO HERO (TÍTULO PRINCIPAL) --- */
+        /* --- ESTILOS DO HERO (TOPO DA PÁGINA INICIAL) --- */
         .hero-title {
             text-align: center;
             font-size: 4.5rem;
             margin-top: 20px;
-            margin-bottom: 0;
+            margin-bottom: 0px;
             color: #ffffff;
             font-family: 'Cinzel', serif;
         }
+        
         .hero-subtitle {
             text-align: center;
             color: #888;
@@ -80,18 +82,17 @@ def injetar_css_premium():
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 0px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 30px;
-            overflow: hidden;
+            transition: all 0.4s ease;
+            margin-bottom: 25px;
             display: flex;
             flex-direction: column;
             height: 100%;
+            overflow: hidden;
         }
         .project-card:hover {
             border-color: var(--accent);
             transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.08);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.1);
             background: var(--card-hover);
         }
         .img-container {
@@ -107,8 +108,8 @@ def injetar_css_premium():
             object-fit: cover;
             transition: transform 1.2s ease;
         }
-        .project-card:hover img {
-            transform: scale(1.05);
+        .project-card:hover img { 
+            transform: scale(1.05); 
         }
         .card-content { 
             padding: 25px; 
@@ -118,7 +119,7 @@ def injetar_css_premium():
         }
         .project-title { 
             font-family: 'Cinzel', serif; 
-            font-size: 1.3rem; 
+            font-size: 1.2rem; 
             color: var(--accent); 
             margin-bottom: 10px; 
         }
@@ -126,313 +127,546 @@ def injetar_css_premium():
             font-size: 0.9rem; 
             color: var(--text-muted); 
             line-height: 1.6; 
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-        .project-tags {
-            font-size: 0.75rem; color: #aaaaaa; background: #1a1a1a;
-            padding: 6px 10px; border-radius: 4px; display: inline-block;
-            margin-top: 5px; margin-right: 8px; border: 1px solid #333;
-            letter-spacing: 0.5px;
+            margin-bottom: 15px; 
+            flex-grow: 1; 
         }
 
-        /* --- SIDEBAR CUSTOMIZADA --- */
+        /* --- MENU LATERAL (SIDEBAR) --- */
         [data-testid="stSidebar"] { 
             background-color: #050505 !important; 
             border-right: 1px solid var(--border); 
         }
         [data-testid="stSidebar"] .stButton>button {
-            background-color: transparent !important; color: #666 !important;
-            border: none !important; border-left: 3px solid transparent !important;
-            text-align: left !important; padding: 15px 25px !important;
-            font-size: 0.9rem !important; letter-spacing: 3px; transition: 0.3s;
-            width: 100%; justify-content: flex-start;
+            background-color: transparent !important; 
+            color: #666 !important;
+            border: none !important; 
+            border-left: 3px solid transparent !important;
+            text-align: left !important; 
+            padding: 15px 25px !important;
+            font-size: 0.9rem !important; 
+            letter-spacing: 3px; 
+            transition: 0.3s;
+            width: 100%; 
+            justify-content: flex-start;
         }
         [data-testid="stSidebar"] .stButton>button:hover {
-            color: #fff !important; border-left: 3px solid var(--accent) !important;
-            background-color: #0a0a0a !important; transform: translateX(5px);
+            color: #fff !important; 
+            border-left: 3px solid var(--accent) !important;
+            background-color: #0a0a0a !important; 
+            transform: translateX(5px);
         }
 
-        /* --- BOTÕES PREMIUM --- */
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 20px;
+        }
+
+        /* --- BOTÕES PREMIUM CALL TO ACTION --- */
         .btn-gold {
-            display: block; background: var(--accent); color: #000 !important;
-            text-align: center; padding: 18px 25px; font-weight: 700;
-            letter-spacing: 3px; text-decoration: none; text-transform: uppercase;
-            margin-top: 20px; transition: 0.4s; font-size: 0.9rem;
-            border-radius: 3px; border: 1px solid var(--accent);
+            display: block; 
+            background: var(--accent); 
+            color: #000 !important;
+            text-align: center; 
+            padding: 15px; 
+            font-weight: 700;
+            letter-spacing: 2px; 
+            text-decoration: none; 
+            text-transform: uppercase;
+            transition: 0.4s; 
+            border-radius: 3px; 
+            border: 1px solid var(--accent);
+            font-size: 0.85rem;
         }
         .btn-gold:hover { 
-            background: #fff; border-color: #fff;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3); 
+            background: #fff; 
+            border-color: #fff; 
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); 
         }
+        
         .btn-outline {
-            display: block; background: transparent; color: var(--accent) !important;
-            text-align: center; padding: 18px 25px; font-weight: 600;
-            letter-spacing: 2px; text-decoration: none; text-transform: uppercase;
-            margin-top: 20px; transition: 0.3s; border: 1px solid var(--accent); border-radius: 3px;
+            display: block; 
+            background: transparent; 
+            color: var(--accent) !important;
+            text-align: center; 
+            padding: 15px; 
+            font-weight: 600;
+            letter-spacing: 2px; 
+            text-decoration: none; 
+            text-transform: uppercase;
+            transition: 0.3s; 
+            border: 1px solid var(--accent); 
+            border-radius: 3px;
+            font-size: 0.85rem;
         }
-        .btn-outline:hover { background: var(--accent); color: #000 !important; }
+        .btn-outline:hover { 
+            background: var(--accent); 
+            color: #000 !important; 
+        }
 
-        /* --- TABELAS DE PREÇO --- */
+        /* --- TABELAS DE PREÇO (PRICING) --- */
         .pricing-card {
-            background: #0f0f0f; border: 1px solid #333; padding: 40px 30px;
-            text-align: center; border-radius: 8px; transition: 0.3s; height: 100%;
-            display: flex; flex-direction: column;
+            background: #0d0d0d; 
+            border: 1px solid #333; 
+            padding: 40px 30px;
+            text-align: center; 
+            border-radius: 8px; 
+            transition: 0.3s; 
+            height: 100%;
+            display: flex; 
+            flex-direction: column;
         }
-        .pricing-card:hover { border-color: var(--accent); background: #141414; transform: translateY(-5px); }
-        .pricing-title { font-family: 'Cinzel', serif; color: #fff; font-size: 1.5rem; margin-bottom: 10px; }
-        .pricing-subtitle { color: var(--accent); font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 25px; }
-        .pricing-features {
-            text-align: left; color: #aaa; line-height: 2.2; margin-bottom: 30px;
-            font-size: 0.95rem; border-top: 1px solid #222; padding-top: 25px; flex-grow: 1;
+        .pricing-card:hover { 
+            border-color: var(--accent); 
+            background: #141414; 
+            transform: translateY(-5px); 
         }
-        .pricing-features span { color: var(--accent); margin-right: 10px; }
 
-        /* --- REGRAS DE RESPONSIVIDADE (MOBILE) --- */
+        /* --- RESPONSIVIDADE MOBILE AVANÇADA --- */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.3rem !important; /* Tamanho ajustado para não quebrar PALLADIUM */
-                margin-top: 40px !important; /* Empurra para baixo para o botão do menu não atrapalhar */
+            .hero-title { 
+                font-size: 2.2rem !important; 
+                margin-top: 40px !important; 
             }
-            .hero-subtitle {
-                font-size: 0.75rem !important;
-                letter-spacing: 4px !important;
-                margin-bottom: 30px !important;
+            .hero-subtitle { 
+                font-size: 0.7rem !important; 
+                letter-spacing: 4px !important; 
+            }
+            [data-testid="stHorizontalBlock"] { 
+                flex-direction: column !important; 
             }
             .pricing-card {
-                margin-bottom: 30px !important;
-            }
-            [data-testid="stHorizontalBlock"] {
-                flex-direction: column !important;
+                margin-bottom: 25px;
             }
         }
 
+        /* Esconde botões nativos das imagens do Streamlit */
         button[title="View fullscreen"] { display: none; }
         </style>
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 3. BANCO DE DADOS RELACIONAL (25 PROJETOS DETALHADOS)
+# 3. BANCO DE DADOS ESTRUTURADO (MULTI-ÂNGULO)
 # ==============================================================================
 def carregar_banco_de_dados():
+    """
+    Retorna a matriz de dados de interiores e exteriores.
+    Arquitetura de dados orientada a objetos para listagens dinâmicas.
+    """
     interiores = [
         {
-            "id": "INT-001", "titulo": "Cozinha Minimalista Nero", "categoria": "Cozinha", "estilo": "Minimalista",
-            "descricao_curta": "MDF Preto Silk com iluminação embutida de 3000K e bancada em quartzo.",
-            "descricao_longa": "Projeto de cozinha linear desenvolvido para destacar a elegância do minimalismo escuro. A marcenaria foi inteiramente configurada utilizando o padrão Preto Silk da Guararapes, contrastando perfeitamente com a bancada e frontão em Quartzo Cinza Absoluto. Os puxadores cava integrados reforçam a estética clean.",
-            "materiais": ["MDF Preto Silk", "Quartzo Cinza", "Puxador Cava", "Perfis LED"],
-            "software": "SketchUp + V-Ray 6", "tempo_render": "3h 45m (4K)",
-            "img": "https://images.unsplash.com/photo-1556911220-e15022357539?q=80&w=1200"
+            "id": "I1",
+            "titulo": "Cozinha Minimalista Nero",
+            "categoria": "Cozinha",
+            "estilo": "Minimalista",
+            "descricao_curta": "MDF Preto Silk e puxadores cava integrados.",
+            "descricao_longa": "Análise técnica de 4 ângulos focando na continuidade das fibras do MDF Preto Silk e no detalhamento do puxador cava 45º, garantindo alinhamento perfeito das frentes sem ferragens aparentes.",
+            "materiais": ["MDF Preto Silk", "Quartzo Cinza", "Puxador Cava", "LED 3000K"],
+            "software": "SketchUp + V-Ray 6",
+            "tempo_render": "3h 45m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1556911220-e15022357539?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1556911261-6bd341186b2f?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-002", "titulo": "Suíte Master com Ripado", "categoria": "Dormitório", "estilo": "Contemporâneo",
-            "descricao_curta": "Painel amadeirado ripado, laca cinza e cabeceira estofada em linho.",
-            "descricao_longa": "Uma suíte master projetada para oferecer máximo conforto visual. A parede principal recebe um painel ripado em MDF Freijó Puro da Arauco, com espaçamento técnico de 15mm. A cabeceira estofada em linho cru recebe iluminação indireta no formato 'wall washer', destacando a textura do tecido.",
-            "materiais": ["MDF Freijó", "Laca Cinza Fosca", "Linho Cru"],
-            "software": "3ds Max + Corona Renderer", "tempo_render": "5h 20m (4K)",
-            "img": "https://images.unsplash.com/photo-1616594111750-4744bda7e9a2?q=80&w=1200"
+            "id": "I2",
+            "titulo": "Suíte Master Ripado",
+            "categoria": "Dormitório",
+            "estilo": "Contemporâneo",
+            "descricao_curta": "Painel Freijó com iluminação indireta.",
+            "descricao_longa": "Uma suíte master projetada para máximo conforto. 4 perspectivas detalhando a paginação técnica do ripado em MDF Freijó e o comportamento da luz 'wall washer' sobre a cabeceira em linho cru.",
+            "materiais": ["MDF Freijó", "Linho Cru", "Laca Cinza"],
+            "software": "3ds Max + Corona Renderer",
+            "tempo_render": "5h 20m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1616594111750-4744bda7e9a2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1583847268964-b28dc2f51ac9?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-003", "titulo": "Home Theater Premium", "categoria": "Living", "estilo": "Luxo Moderno",
-            "descricao_curta": "Móvel suspenso em laca e painel com perfis metálicos dourados.",
-            "descricao_longa": "O ponto focal desta sala de estar é o imponente Home Theater. A marcenaria inferior foi desenhada como um bloco monolítico suspenso em Laca Fosca Off-White, enquanto o painel principal mescla MDF madeirado com finos perfis de metalon dourado.",
-            "materiais": ["Laca Off-White", "Metalon Dourado", "MDF Nogueira"],
-            "software": "SketchUp + Enscape 3.5", "tempo_render": "1h 10m (4K)",
-            "img": "https://images.unsplash.com/photo-1593910265171-ef6709849202?q=80&w=1200"
-        },
-        {
-            "id": "INT-004", "titulo": "Gourmet Integrado", "categoria": "Área de Lazer", "estilo": "Industrial Chic",
-            "descricao_curta": "Churrasqueira nivelada com marcenaria em tons grafite e madeira de demolição.",
-            "descricao_longa": "Espaço projetado para receber convidados, integrando a área de churrasco com o living interno. A marcenaria foi pensada para alta durabilidade, simulando chapas de MDF Grafite da Duratex. O grande destaque do render é a iluminação diurna (HDRI de final de tarde).",
-            "materiais": ["MDF Grafite", "Madeira Maciça", "Cimento Queimado"],
-            "software": "3ds Max + V-Ray", "tempo_render": "4h 30m (4K)",
-            "img": "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?q=80&w=1200"
-        },
-        {
-            "id": "INT-005", "titulo": "Home Office Executivo", "categoria": "Escritório", "estilo": "Corporativo",
-            "descricao_curta": "Estante com nichos iluminados, mesa flutuante e cadeiras em couro.",
-            "descricao_longa": "Com a nova realidade do trabalho híbrido, este espaço foi otimizado para conferências de vídeo e concentração. A estante ao fundo mistura nichos fechados em Laca Preta e abertos em MDF Carvalho Hannover.",
-            "materiais": ["Laca Preta", "MDF Carvalho Hannover", "Couro Natural"],
-            "software": "SketchUp + V-Ray Cloud", "tempo_render": "45m (Cloud 4K)",
-            "img": "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200"
-        },
-        {
-            "id": "INT-006", "titulo": "Banheiro SPA em Mármore", "categoria": "Banheiro", "estilo": "Clássico Modernizado",
-            "descricao_curta": "Gabinete em MDF Branco Ultra com cuba esculpida em mármore Calacatta.",
-            "descricao_longa": "Projeto de sala de banho focado em relaxamento. A marcenaria técnica simulou o uso de MDF Ultra (resistente à umidade) com acabamento branco fosco e puxadores do tipo cava 45 graus.",
-            "materiais": ["Mármore Calacatta Gold", "MDF Branco Ultra", "Metais Red Gold"],
-            "software": "3ds Max + Corona Renderer", "tempo_render": "6h 15m (4K)",
-            "img": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1200"
-        },
-        {
-            "id": "INT-007", "titulo": "Living Contemporâneo", "categoria": "Living", "estilo": "Contemporâneo",
-            "descricao_curta": "Sala de pé-direito duplo com grandes aberturas e mobiliário de design.",
-            "descricao_longa": "Este living de pé-direito duplo exigiu precisão absoluta na volumetria. O render tira partido da luz natural abundante, estudando como o sol das 15h interage com o piso em porcelanato polido de grande formato.",
+            "id": "I3",
+            "titulo": "Living Contemporâneo",
+            "categoria": "Living",
+            "estilo": "Moderno",
+            "descricao_curta": "Sala ampla com pé-direito duplo.",
+            "descricao_longa": "Estudo de luz natural em diferentes ângulos da sala de pé-direito duplo, destacando os reflexos precisos no porcelanato de grande formato e a sutileza do MDF Areia no mobiliário.",
             "materiais": ["MDF Areia", "Porcelanato Polido", "Vidro Laminado"],
-            "software": "SketchUp + V-Ray", "tempo_render": "3h 00m (4K)",
-            "img": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1200"
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "4h 10m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-008", "titulo": "Closet Walk-in Iluminado", "categoria": "Dormitório", "estilo": "Boutique",
-            "descricao_curta": "Divisórias em MDF cinza, portas em vidro reflecta e cabideiros em LED.",
-            "descricao_longa": "Um closet desenhado para parecer uma boutique de luxo. Não há portas cegas; toda a proteção é feita com esquadrias finas pretas e Vidro Reflecta Bronze. A marcenaria interna foi rigorosamente paginada.",
+            "id": "I4",
+            "titulo": "Banheiro SPA em Mármore",
+            "categoria": "Banheiro",
+            "estilo": "Clássico",
+            "descricao_curta": "MDF Branco Ultra e cuba em Calacatta Gold.",
+            "descricao_longa": "Sequência de ângulos mostrando a resistência e assepsia do gabinete suspenso em MDF Ultra (resistente à umidade), contrastando com a cuba esculpida no nobre mármore Calacatta.",
+            "materiais": ["MDF Ultra", "Mármore Calacatta", "Metais Red Gold"],
+            "software": "3ds Max + Corona Renderer",
+            "tempo_render": "6h 15m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1603912975949-c1e1e0a29363?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80"
+            ]
+        },
+        {
+            "id": "I5",
+            "titulo": "Gourmet Integrado",
+            "categoria": "Área de Lazer",
+            "estilo": "Industrial",
+            "descricao_curta": "Churrasqueira com marcenaria em tons grafite.",
+            "descricao_longa": "Foco na integração visual entre a área técnica da churrasqueira e o mobiliário de apoio. Simulação de chapas em MDF Grafite com alta resistência a gordura, e o uso de madeira de demolição na mesa.",
+            "materiais": ["MDF Grafite", "Cimento Queimado", "Madeira Maciça"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "4h 30m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1556912998-c57cc6b63ce7?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1565183928294-7063f23ce0f8?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1505692952047-1a78307da8f2?auto=format&fit=crop&w=1200&q=80"
+            ]
+        },
+        {
+            "id": "I6",
+            "titulo": "Home Office Executivo",
+            "categoria": "Escritório",
+            "estilo": "Corporativo",
+            "descricao_curta": "Estante técnica com nichos iluminados.",
+            "descricao_longa": "Visões focadas na ergonomia da mesa flutuante e no detalhamento das prateleiras iluminadas. Contraste marcante entre a Laca Preta e o padrão MDF Carvalho Hannover.",
+            "materiais": ["Laca Preta", "MDF Carvalho Hannover", "Couro Natural"],
+            "software": "3ds Max + Corona Renderer",
+            "tempo_render": "3h 45m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80"
+            ]
+        },
+        {
+            "id": "I7",
+            "titulo": "Closet Walk-in Boutique",
+            "categoria": "Dormitório",
+            "estilo": "Premium",
+            "descricao_curta": "Portas em vidro reflecta e cabideiros em LED.",
+            "descricao_longa": "Tour visual pelos módulos internos organizados para máxima eficiência de armazenamento. Proteção do closet feita inteiramente com Vidro Reflecta Bronze e perfis em alumínio preto.",
             "materiais": ["Vidro Reflecta Bronze", "MDF Cinza Sagrado", "Alumínio Preto"],
-            "software": "SketchUp + Enscape", "tempo_render": "1h 20m (4K)",
-            "img": "https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=1200"
+            "software": "SketchUp + Enscape",
+            "tempo_render": "1h 50m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-009", "titulo": "Quarto Infantil Lúdico", "categoria": "Dormitório", "estilo": "Lúdico",
-            "descricao_curta": "Marcenaria funcional com nichos coloridos, bicama e cantinho de estudos.",
-            "descricao_longa": "Projeto infantil focado em ergonomia e segurança. O render detalha os cantos arredondados da marcenaria, simulando o acabamento impecável em laca. A paleta de cores pastéis foi configurada com valores exatos de RGB.",
-            "materiais": ["Laca Rosa Pastel", "MDF Carvalho Munique", "Algodão Orgânico"],
-            "software": "3ds Max + V-Ray", "tempo_render": "3h 10m (4K)",
-            "img": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=1200"
+            "id": "I8",
+            "titulo": "Sala de Jantar Elegance",
+            "categoria": "Living",
+            "estilo": "Clássico",
+            "descricao_curta": "Buffet com portas em palhinha indiana e tampo em mármore.",
+            "descricao_longa": "Destaque para o realismo da textura vazada da palhinha indiana aplicada ao buffet e o encaixe perfeito da pedra de mármore travertino na marcenaria do apoio.",
+            "materiais": ["Palhinha Indiana", "MDF Nogueira", "Mármore Travertino"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "5h 10m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1617806118233-18e16208a50a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1540932239986-30128078f3b5?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-010", "titulo": "Sala de Jantar Elegance", "categoria": "Living", "estilo": "Clássico",
-            "descricao_curta": "Buffet sob medida com portas em palhinha natural indiana e tampo de pedra.",
-            "descricao_longa": "Uma sala de jantar que respira sofisticação. A marcenaria do buffet apresenta um dos maiores desafios do 3D: a renderização realista da textura da palhinha natural indiana vazada. O uso de mapas de Opacidade e Normal Bump garantiu o realismo fotográfico.",
-            "materiais": ["Palhinha Indiana", "MDF Nogueira Borges", "Mármore Travertino"],
-            "software": "SketchUp + V-Ray 6", "tempo_render": "4h 40m (4K)",
-            "img": "https://images.unsplash.com/photo-1617806118233-18e16208a50a?q=80&w=1200"
+            "id": "I9",
+            "titulo": "Quarto Lúdico Infantil",
+            "categoria": "Dormitório",
+            "estilo": "Infantil",
+            "descricao_curta": "Cores pastéis, nichos e formas arredondadas.",
+            "descricao_longa": "Detalhamento profundo de segurança, mostrando cantos arredondados simulando o acabamento curvo em laca premium, garantindo um ambiente ergonômico e lúdico para a criança.",
+            "materiais": ["Laca Rosa Pastel", "MDF Carvalho", "Algodão Orgânico"],
+            "software": "3ds Max + V-Ray",
+            "tempo_render": "3h 25m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1505692952047-1a78307da8f2?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-011", "titulo": "Adega Privativa", "categoria": "Área de Lazer", "estilo": "Rústico Moderno",
-            "descricao_curta": "Nichos tipo colmeia para vinhos, climatização e revestimento em tijolos.",
-            "descricao_longa": "Subsolo transformado em uma adega de alto padrão. O espaço exige pouca luz para a conservação dos vinhos, o que no 3D gera ruído. A marcenaria foi simulada com lâminas de madeira natural Cumaru.",
-            "materiais": ["Madeira Maciça Cumaru", "Tijolo Inglês", "Vidro Duplo"],
-            "software": "3ds Max + V-Ray", "tempo_render": "5h 50m (4K)",
-            "img": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?q=80&w=1200"
+            "id": "I10",
+            "titulo": "Adega Particular",
+            "categoria": "Área de Lazer",
+            "estilo": "Rústico Moderno",
+            "descricao_curta": "Nichos colmeia em madeira maciça Cumaru.",
+            "descricao_longa": "Ângulos imersivos que exploram a penumbra (tratada com AI Denoising) e a textura natural da madeira Cumaru contrastando com o tijolo inglês da parede de fundo.",
+            "materiais": ["Madeira Cumaru", "Tijolo Inglês", "Vidro Duplo"],
+            "software": "3ds Max + V-Ray",
+            "tempo_render": "6h 40m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1585553616435-2dc0a54e271d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1565183928294-7063f23ce0f8?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-012", "titulo": "Hall de Entrada Minimal", "categoria": "Circulação", "estilo": "Minimalista",
-            "descricao_curta": "Aparador suspenso slim e painel inteiriço de espelhos bisotados.",
-            "descricao_longa": "O desafio de renderizar espaços pequenos é a distorção da câmera. Utilizamos lentes de 35mm no software para evitar a aparência de 'olho de peixe'. O aparador suspenso possui apenas 12cm de espessura.",
+            "id": "I11", "titulo": "Hall Minimal",
+            "categoria": "Circulação",
+            "estilo": "Minimalista",
+            "descricao_curta": "Aparador slim suspenso e painel de espelhos.",
+            "descricao_longa": "Uso estratégico de espelhos para duplicar o espaço. As 4 visões mostram o console de 12cm de espessura com gavetas no formato fecho-toque e o piso de granito polido.",
             "materiais": ["MDF Lacca Cetin", "Espelho Prata Bisotado", "Piso em Granito"],
-            "software": "SketchUp + Corona", "tempo_render": "2h 15m (4K)",
-            "img": "https://images.unsplash.com/photo-1583847268964-b28dc2f51ac9?q=80&w=1200"
+            "software": "SketchUp + Corona Renderer",
+            "tempo_render": "2h 30m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1583847268964-b28dc2f51ac9?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-013", "titulo": "Lavanderia Organizada", "categoria": "Serviço", "estilo": "Funcional",
-            "descricao_curta": "Armários aéreos totais, tulhas embutidas e cabideiro de secagem rápida.",
-            "descricao_longa": "Provar que áreas de serviço também podem ser de alto padrão. Marcenaria técnica desenhada respeitando as áreas de ventilação das máquinas de lavar. Simulação do uso de chapa em MDF Branco Ártico.",
-            "materiais": ["MDF Branco Ártico", "Bancada em Corian", "Rodapés de Alumínio"],
-            "software": "SketchUp + Enscape", "tempo_render": "40m (4K)",
-            "img": "https://images.unsplash.com/photo-1521783593447-5702b9bfd267?q=80&w=1200"
+            "id": "I12", "titulo": "Lavanderia Técnica",
+            "categoria": "Serviço",
+            "estilo": "Funcional",
+            "descricao_curta": "MDF Branco Ártico, tulhas embutidas e cabideiro.",
+            "descricao_longa": "Ângulos que provam como a marcenaria inteligente organiza o setor de serviços. Simulação técnica de respiros para máquinas e rodapés metálicos contra umidade.",
+            "materiais": ["MDF Branco Ártico", "Corian", "Alumínio"],
+            "software": "SketchUp + Enscape",
+            "tempo_render": "1h 00m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1521783593447-5702b9bfd267?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1556911220-e15022357539?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-014", "titulo": "Biblioteca Home", "categoria": "Escritório", "estilo": "Clássico Modernizado",
-            "descricao_curta": "Estante de pé-direito duplo com escada rolante metálica e iluminação linear.",
-            "descricao_longa": "A obra-prima deste ambiente é a estante do piso ao teto com quase 6 metros de altura. O render utilizou instanciamento proxy para popular as estantes com centenas de livros 3D sem travar o processamento da máquina.",
-            "materiais": ["MDF Carvalho Natural", "Estrutura Metálica Preta", "Piso Vinílico"],
-            "software": "3ds Max + Corona Renderer", "tempo_render": "6h 30m (4K)",
-            "img": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1200"
+            "id": "I13", "titulo": "Biblioteca Classic",
+            "categoria": "Escritório",
+            "estilo": "Clássico Modernizado",
+            "descricao_curta": "Estante pé-direito duplo e escada metálica.",
+            "descricao_longa": "Destaque para a verticalidade da estante de 6 metros. O uso de texturas do Carvalho Natural contrasta com os trilhos de iluminação eletrificados e a escada deslizante.",
+            "materiais": ["MDF Carvalho Natural", "Metal Preto", "Piso Vinílico"],
+            "software": "3ds Max + Corona",
+            "tempo_render": "6h 10m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "INT-015", "titulo": "Recepção de Clínica Médica", "categoria": "Comercial", "estilo": "Comercial Premium",
-            "descricao_curta": "Balcão orgânico em curvas com filetes de LED e materiais laváveis.",
-            "descricao_longa": "Marcenaria comercial de alta exigência higiênica. O balcão principal foi desenhado com curvas suaves revestidas em Fórmica Branca Brilhante. A base do balcão possui um recuo com LED azul para criar sensação de flutuação.",
-            "materiais": ["Laminado Melamínico", "MDF madeirado", "Porcelanato"],
-            "software": "SketchUp + V-Ray", "tempo_render": "2h 45m (4K)",
-            "img": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1200"
+            "id": "I14", "titulo": "Recepção Comercial",
+            "categoria": "Comercial",
+            "estilo": "Premium",
+            "descricao_curta": "Balcão em curva com filetes LED embutidos.",
+            "descricao_longa": "Perspectivas que mostram o design orgânico da recepção. A Fórmica Branca Brilhante e o recuo com LED criam uma sensação de leveza estrutural.",
+            "materiais": ["Fórmica Branca Brilhante", "MDF Madeirado", "Porcelanato"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "3h 30m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
+            ]
+        },
+        {
+            "id": "I15", "titulo": "Hometheater Laca Brilho",
+            "categoria": "Living",
+            "estilo": "Luxo",
+            "descricao_curta": "Painel de TV em laca com múltiplos polimentos.",
+            "descricao_longa": "Estudo profundo de reflexos PBR em 4 ângulos, provando a perfeição das múltiplas camadas de verniz aplicadas à Laca Polida que reveste o painel principal da TV.",
+            "materiais": ["Laca Alto Brilho", "MDF Grafite", "Couro Preto"],
+            "software": "3ds Max + V-Ray",
+            "tempo_render": "5h 45m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1593910265171-ef6709849202?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&w=1200&q=80"
+            ]
         }
     ]
 
     exteriores = [
         {
-            "id": "EXT-001", "titulo": "Residência Contemporânea", "categoria": "Fachada", "estilo": "Contemporâneo",
-            "descricao_curta": "Fachada com brises amadeirados e iluminação externa cênica.",
-            "descricao_longa": "Projeto arquitetônico residencial destacando volumes sobrepostos. O grande diferencial desta imagem é o uso de brises verticais em imitação de madeira, modelados individualmente para gerar sombras perfeitamente anguladas.",
-            "materiais": ["Brises em Alumínio Madeirado", "Concreto Aparente", "Esquadrias Pretas"],
-            "software": "SketchUp + V-Ray + Chaos Cloud", "tempo_render": "40m (Cloud 4K)",
-            "img": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200"
+            "id": "E1", "titulo": "Fachada Contemporânea", "categoria": "Fachada", "estilo": "Moderna",
+            "descricao_curta": "Volumes sobrepostos e brises amadeirados.",
+            "descricao_longa": "4 visões da volumetria externa, transitando entre a forte luz solar da tarde e a sutil iluminação noturna cênica embutida nos balizadores de piso e na laje.",
+            "materiais": ["Brises de Alumínio", "Concreto Aparente", "Esquadrias Pretas"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "5h 10m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-002", "titulo": "Área de Lazer e Piscina", "categoria": "Área de Lazer", "estilo": "Tropical Chic",
-            "descricao_curta": "Deck em madeira natural nivelado com borda infinita da piscina.",
-            "descricao_longa": "Renderização externa complexa focada na física da água. Os reflexos do céu HDRI, as cáusticas geradas pela luz do sol atravessando a água da piscina e o mapeamento realista do deck criam um hiper-realismo fotográfico.",
-            "materiais": ["Deck Madeira Itaúba", "Pastilha Cerâmica", "Mármore Branco"],
-            "software": "3ds Max + Corona", "tempo_render": "7h 00m (4K)",
-            "img": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1200"
+            "id": "E2", "titulo": "Área de Lazer Tropical", "categoria": "Lazer", "estilo": "Tropical",
+            "descricao_curta": "Deck em madeira natural e borda infinita.",
+            "descricao_longa": "Análise da física da água (cáusticas e refrações) e reflexos do céu HDRI em múltiplos ângulos. O deck em Itaúba possui imperfeições realistas criadas com mapas de Displacement.",
+            "materiais": ["Madeira Itaúba", "Pastilhas Cerâmicas", "Mármore Branco"],
+            "software": "3ds Max + Corona Renderer",
+            "tempo_render": "7h 30m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-003", "titulo": "Fachada Corporativa Glass", "categoria": "Comercial", "estilo": "Corporativo",
-            "descricao_curta": "Uso intensivo de pele de vidro e perfis de alumínio preto no contexto urbano.",
-            "descricao_longa": "Edifício comercial focado na transparência e reflexo. A fachada em Pele de Vidro Refletivo exigiu a modelagem do ambiente interno (escritórios falsos) para que o vidro não parecesse 'cego' no render.",
+            "id": "E3", "titulo": "Corporativo Glass", "categoria": "Comercial", "estilo": "Urbano",
+            "descricao_curta": "Pele de vidro refletiva e asfalto PBR molhado.",
+            "descricao_longa": "Foco na transparência arquitetônica e no contexto urbano envolvente. O edifício possui interiores modelados em low-poly para que o vidro ganhe profundidade real.",
             "materiais": ["Pele de Vidro Prata", "ACM Preto", "Concreto"],
-            "software": "3ds Max + V-Ray", "tempo_render": "5h 45m (4K)",
-            "img": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200"
+            "software": "3ds Max + V-Ray",
+            "tempo_render": "6h 45m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-004", "titulo": "Casa de Campo Sustentável", "categoria": "Fachada", "estilo": "Rústico",
-            "descricao_curta": "Integração total com a natureza, pedras irregulares e cobertura em telha shingle.",
-            "descricao_longa": "O desafio arquitetônico desta cena de campo foi a integração com o bioma ao redor. Usamos o Forest Pack (Plugin do 3ds Max) para distribuir milhares de árvores, gramíneas e pedras no terreno sem travar o computador.",
+            "id": "E4", "titulo": "Casa de Campo", "categoria": "Fachada", "estilo": "Rústico",
+            "descricao_curta": "Integração ambiental com pedras irregulares.",
+            "descricao_longa": "Perspectivas integradas à vegetação densa. O uso do Forest Pack permitiu distribuir milhares de árvores e arbustos sem comprometer a performance do projeto 3D.",
             "materiais": ["Pedra Moledo", "Vigas de Eucalipto", "Telha Shingle"],
-            "software": "3ds Max + Corona", "tempo_render": "8h 30m (4K)",
-            "img": "https://images.unsplash.com/photo-1500313830540-7b6650a74fd0?q=80&w=1200"
+            "software": "3ds Max + Corona Renderer",
+            "tempo_render": "8h 15m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1500313830540-7b6650a74fd0?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-005", "titulo": "Rooftop Lounge Urbano", "categoria": "Área de Lazer", "estilo": "Urbano Moderno",
-            "descricao_curta": "Mobiliário externo resistente a intempéries e vista skyline noturna.",
-            "descricao_longa": "Área social localizada no 20º andar de um edifício. O render explora a iluminação noturna (Blue Hour), contrastando as luzes frias da cidade ao fundo com a iluminação quente e acolhedora dos cordões de luz.",
-            "materiais": ["Deck Sintético Ecológico", "Mobiliário Corda Náutica", "Vidro Temperado"],
-            "software": "SketchUp + Enscape", "tempo_render": "1h 15m (4K)",
-            "img": "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?q=80&w=1200"
+            "id": "E5", "titulo": "Rooftop Lounge", "categoria": "Lazer", "estilo": "Urbano Moderno",
+            "descricao_curta": "Skyline noturna e mobiliário em corda náutica.",
+            "descricao_longa": "4 ângulos da área social superior com foco em iluminação de 'Blue Hour' (horário mágico da fotografia), balanceando luzes quentes artificiais e o fundo frio da cidade.",
+            "materiais": ["Deck Sintético", "Corda Náutica", "Vidro Temperado"],
+            "software": "SketchUp + Enscape",
+            "tempo_render": "1h 45m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-006", "titulo": "Entrada de Condomínio", "categoria": "Comercial", "estilo": "Imponente",
-            "descricao_curta": "Guarita blindada com fachada frontal revestida em chapa de aço corten.",
-            "descricao_longa": "Apresentação para lançamento imobiliário. O projeto de portaria exigia um ar de extrema segurança sem perder a elegância. O revestimento em Aço Corten foi mapeado cuidadosamente no 3D para evitar repetições na textura.",
-            "materiais": ["Aço Corten", "Vidro Blindado Escuro", "Pedra Portuguesa"],
-            "software": "SketchUp + V-Ray", "tempo_render": "3h 40m (4K)",
-            "img": "https://images.unsplash.com/photo-1590060417603-eb1593d04976?q=80&w=1200"
+            "id": "E6", "titulo": "Entrada Condomínio", "categoria": "Comercial", "estilo": "Imponente",
+            "descricao_curta": "Chapas de Aço Corten e guarita blindada.",
+            "descricao_longa": "Visão técnica da segurança e elegância no acesso principal do empreendimento. O Aço Corten foi meticulosamente mapeado para não apresentar 'tile' (repetições na textura de ferrugem).",
+            "materiais": ["Aço Corten", "Vidro Blindado", "Pedra Portuguesa"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "4h 10m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-007", "titulo": "Residência Estudo Luminotécnico", "categoria": "Fachada", "estilo": "Contemporâneo Noturno",
-            "descricao_curta": "Fachada noturna com ênfase no estudo de fachos de luz e perfis embutidos.",
-            "descricao_longa": "Este render não focou apenas na arquitetura, mas no estudo luminotécnico. Foram configurados IES Profiles (arquivos reais das lâmpadas de fabricantes de iluminação) para garantir que os fachos de luz que banham a textura no render sejam fiéis.",
+            "id": "E7", "titulo": "Estudo Luminotécnico", "categoria": "Fachada", "estilo": "Contemporâneo",
+            "descricao_curta": "Fachos de luz fiéis usando arquivos IES reais.",
+            "descricao_longa": "4 imagens noturnas provando a precisão luminotécnica da simulação. O uso de perfis IES garante que as manchas de luz projetadas na alvenaria se comportem exatamente como o projeto executivo aprovado.",
             "materiais": ["Tinta Acrílica Branca", "MDF Naval Externo", "Iluminação LED IES"],
-            "software": "3ds Max + V-Ray", "tempo_render": "6h 10m (4K)",
-            "img": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200"
+            "software": "3ds Max + V-Ray",
+            "tempo_render": "6h 25m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-008", "titulo": "Industrial Loft Exterior", "categoria": "Fachada", "estilo": "Industrial Style",
-            "descricao_curta": "Retrofit de galpão transformado em loft de luxo com janelas quadriculadas.",
-            "descricao_longa": "Render de inspiração nova-iorquina. O desafio foi construir a textura dos tijolinhos ingleses aparentes desgastados pelo tempo. Utilizamos técnicas avançadas de Displacement no V-Ray.",
-            "materiais": ["Tijolo de Demolição", "Metalon Grafite", "Vidro Canelado"],
-            "software": "SketchUp + V-Ray 6", "tempo_render": "4h 50m (4K)",
-            "img": "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=1200"
+            "id": "E8", "titulo": "Industrial Loft", "categoria": "Fachada", "estilo": "Industrial",
+            "descricao_curta": "Tijolo de demolição, metal e grandes janelas.",
+            "descricao_longa": "O projeto de retrofit conta com profunda aplicação de Displacement nos rejuntes e janelas com caixilhos de ferro. A iluminação de outono reforça o clima 'Brooklyn' proposto.",
+            "materiais": ["Tijolo Inglês Demolição", "Metalon Grafite", "Vidro Canelado"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "4h 50m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-009", "titulo": "Varanda Gourmet de Apartamento", "categoria": "Área de Lazer", "estilo": "Moderna",
-            "descricao_curta": "Nivelamento de piso, fechamento em vidro tipo Reiki e painel ripado externo.",
-            "descricao_longa": "Uma sacada de 18m² transformada em extensão da sala. A marcenaria projetada aqui utiliza MDF Naval resistente à insolação, com o painel ripado escondendo as máquinas de ar-condicionado.",
-            "materiais": ["MDF Naval Amadeirado", "Porcelanato Amadeirado", "Sistema Reiki"],
-            "software": "3ds Max + Corona Renderer", "tempo_render": "4h 20m (4K)",
-            "img": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1200"
+            "id": "E9", "titulo": "Varanda Gourmet de Apartamento", "categoria": "Lazer", "estilo": "Apartamento",
+            "descricao_curta": "Fechamento Reiki, nivelamento e MDF Naval.",
+            "descricao_longa": "Otimização de espaço em sacada com integração total à sala. Renderização explora o contraste entre a luz que invade o fechamento de vidro e a marcenaria naval que oculta condensadoras.",
+            "materiais": ["MDF Naval Amadeirado", "Porcelanato", "Sistema em Vidro Reiki"],
+            "software": "3ds Max + Corona Renderer",
+            "tempo_render": "4h 20m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
+            ]
         },
         {
-            "id": "EXT-010", "titulo": "Pátio Interno e Jardim de Inverno", "categoria": "Área Externa", "estilo": "Zen Asiático",
-            "descricao_curta": "Criação de microclima com espelho d'água, pérgola de cumaru e jardim vertical.",
-            "descricao_longa": "O pulmão da casa. Um espaço no meio da arquitetura dedicado ao relaxamento. O render inclui um espelho d'água escuro que reflete o céu e uma pérgola em vigas de Cumaru protegida por vidro.",
-            "materiais": ["Madeira Cumaru Maciça", "Pedra Vulcânica", "Jardim Vertical"],
-            "software": "SketchUp + V-Ray", "tempo_render": "5h 15m (4K)",
-            "img": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1200"
+            "id": "E10", "titulo": "Jardim de Inverno", "categoria": "Externo", "estilo": "Zen Asiático",
+            "descricao_curta": "Espelho d'água orgânico e jardim vertical exuberante.",
+            "descricao_longa": "4 ângulos de um espaço de relaxamento. O grande triunfo do render é a modelagem botânica intensa simulando dezenas de espécies de plantas da Mata Atlântica refletindo no espelho d'água sob a pérgola.",
+            "materiais": ["Madeira Cumaru", "Pedra Vulcânica Escura", "Jardim Vertical 3D"],
+            "software": "SketchUp + V-Ray",
+            "tempo_render": "5h 45m (4K)",
+            "imgs": [
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1500313830540-7b6650a74fd0?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80"
+            ]
         }
     ]
     return interiores, exteriores
 
 # ==============================================================================
-# 4. COMPONENTES VISUAIS REUTILIZÁVEIS
+# 4. COMPONENTES E PÁGINAS DO SISTEMA DE INTERFACE
 # ==============================================================================
-def render_project_card(proj, tipo):
+def render_project_card(proj):
+    """Componente renderizador de blocos de projetos do portfólio."""
     with st.container():
         st.markdown(f"""
             <div class="project-card">
-                <div class="img-container"><img src="{proj['img']}" alt="{proj['titulo']}"></div>
+                <div class="img-container">
+                    <img src="{proj['imgs'][0]}" alt="{proj['titulo']}">
+                </div>
                 <div class="card-content">
                     <div class="project-title">{proj['titulo']}</div>
-                    <div style="font-size: 0.8rem; color: #d4af37; margin-bottom: 10px; text-transform: uppercase;">{proj['categoria']} | {proj['estilo']}</div>
+                    <div style="font-size: 0.8rem; color: #d4af37; margin-bottom: 10px; text-transform: uppercase;">
+                        {proj['categoria']} | {proj['estilo']}
+                    </div>
                     <div class="project-desc">{proj['descricao_curta']}</div>
                 </div>
             </div>
@@ -442,65 +676,43 @@ def render_project_card(proj, tipo):
             st.session_state['page'] = 'Detalhes do Projeto'
             st.rerun()
 
-# ==============================================================================
-# 5. PÁGINAS DO SISTEMA
-# ==============================================================================
 def page_home():
-    # As classes CSS hero-title e hero-subtitle agora garantem a responsividade
+    """Tela Inicial do Palladium Studio (Hero Section)"""
     st.markdown("<h1 class='hero-title'>PALLADIUM STUDIO</h1>", unsafe_allow_html=True)
     st.markdown("<p class='hero-subtitle'>ARCHVIZ PARA ALTA MARCENARIA</p>", unsafe_allow_html=True)
-    
-    st.image("https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1500", use_container_width=True)
+    st.image("https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=80", use_container_width=True)
     
     st.markdown("<br><h2 style='text-align:center; color:#d4af37 !important;'>O Seu Projeto, Antes de Existir.</h2>", unsafe_allow_html=True)
-    st.markdown("""
-        <p style='text-align:center; color:#aaa; max-width: 900px; margin: 0 auto; line-height:1.8;'>
-        Compreendemos a linguagem das marcenarias e dos escritórios de arquitetura. O Palladium Studio não apenas gera imagens, 
-        nós construímos simulações fotorealistas. Mapeamos os catálogos reais (Arauco, Guararapes, Duratex), 
-        estudamos o comportamento da luz natural e artificial, e entregamos uma ferramenta de vendas implacável 
-        que garante a aprovação rápida do seu cliente final.
-        </p>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
-    with c1: 
-        st.markdown("<div style='text-align:center; padding:30px; background:#111; border-radius:6px; border:1px solid #222;'><h1 style='color:#d4af37 !important; font-size:3.5rem; margin:0;'>4K</h1><p style='color:#888; letter-spacing:2px; font-size:0.9rem;'>ULTRA RESOLUÇÃO</p></div>", unsafe_allow_html=True)
-    with c2: 
-        st.markdown("<div style='text-align:center; padding:30px; background:#111; border-radius:6px; border:1px solid #222;'><h1 style='color:#d4af37 !important; font-size:3.5rem; margin:0;'>25+</h1><p style='color:#888; letter-spacing:2px; font-size:0.9rem;'>PROJETOS ENTREGUES</p></div>", unsafe_allow_html=True)
-    with c3: 
-        st.markdown("<div style='text-align:center; padding:30px; background:#111; border-radius:6px; border:1px solid #222;'><h1 style='color:#d4af37 !important; font-size:3.5rem; margin:0;'>100%</h1><p style='color:#888; letter-spacing:2px; font-size:0.9rem;'>FIDELIDADE TÉCNICA</p></div>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#aaa; max-width: 800px; margin: 0 auto; line-height:1.8;'>Respeitamos modulações reais e catálogos físicos para garantir aprovações rápidas.</p>", unsafe_allow_html=True)
     
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    _, col_btn, _ = st.columns([1, 1, 1])
-    with col_btn:
-        if st.button("VISITAR A GALERIA DE PROJETOS", use_container_width=True):
+    _, col, _ = st.columns([1, 1, 1])
+    with col:
+        if st.button("ACESSAR PORTFÓLIO COMPLETO", use_container_width=True):
             st.session_state['page'] = 'Portfólio'
             st.rerun()
 
 def page_portfolio():
+    """Galeria completa em Grid System."""
     int_db, ext_db = carregar_banco_de_dados()
+    st.markdown("<h1>Catálogo de Visualização</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#666; margin-bottom:40px;'>Clique em 'Ver Relatório Técnico' para visualizar perspectivas extras de cada ambiente.</p>", unsafe_allow_html=True)
     
-    st.markdown("<h1 style='font-size:2.5rem; margin-bottom:5px;'>Portfólio Seletivo</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#666; margin-bottom:40px;'>Clique em 'Ver Detalhes' em qualquer projeto para acessar o relatório técnico do render.</p>", unsafe_allow_html=True)
-    
-    st.markdown("<h2 style='border-left: 4px solid #d4af37; padding-left: 15px; margin-bottom:20px;'>DESIGN DE INTERIORES E MARCENARIA</h2>", unsafe_allow_html=True)
-    
+    st.markdown("<h3 style='border-left: 4px solid #d4af37; padding-left: 10px;'>INTERIORES E DETALHAMENTO (15 Projetos)</h3><br>", unsafe_allow_html=True)
     cols_int = st.columns(3)
     for i, proj in enumerate(int_db):
-        with cols_int[i % 3]:
-            render_project_card(proj, "int")
+        with cols_int[i % 3]: 
+            render_project_card(proj)
             
     st.markdown("<br><hr style='border-color:#333;'><br>", unsafe_allow_html=True)
     
-    st.markdown("<h2 style='border-left: 4px solid #d4af37; padding-left: 15px; margin-bottom:20px;'>ARQUITETURA EXTERIOR</h2>", unsafe_allow_html=True)
-    
-    cols_ext = st.columns(3) 
+    st.markdown("<h3 style='border-left: 4px solid #d4af37; padding-left: 10px;'>ARQUITETURA EXTERIOR (10 Projetos)</h3><br>", unsafe_allow_html=True)
+    cols_ext = st.columns(3)
     for i, proj in enumerate(ext_db):
-        with cols_ext[i % 3]:
-            render_project_card(proj, "ext")
+        with cols_ext[i % 3]: 
+            render_project_card(proj)
 
 def page_projeto_detalhe():
+    """Página dinâmica que exibe os múltiplos ângulos (4 fotos) e a ficha técnica de um projeto."""
     proj = st.session_state.get('projeto_selecionado')
     if not proj:
         st.session_state['page'] = 'Portfólio'
@@ -512,161 +724,157 @@ def page_projeto_detalhe():
         st.session_state['page'] = 'Portfólio'
         st.rerun()
         
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='font-size:3rem; margin-top:20px; margin-bottom:0;'>Galeria Multi-Ângulo: {proj['titulo']}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#d4af37; letter-spacing:2px; text-transform:uppercase;'>{proj['categoria']} | {proj['estilo']}</p><br>", unsafe_allow_html=True)
     
-    st.image(proj['img'], use_container_width=True)
-    
-    st.markdown(f"<h1 style='font-size:3rem; margin-top:20px; margin-bottom:0;'>{proj['titulo']}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:#d4af37; letter-spacing:2px; text-transform:uppercase;'>{proj['categoria']} | {proj['estilo']}</p>", unsafe_allow_html=True)
+    # Exibição de 4 fotos empilhadas valorizando a verticalidade
+    for i, img_url in enumerate(proj['imgs']):
+        st.image(img_url, caption=f"Perspectiva de Câmera 0{i+1}", use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
     
     st.write("---")
     
-    col_desc, col_tech = st.columns([2, 1])
-    
-    with col_desc:
-        st.markdown("<h3>O Desafio e a Solução</h3>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:#aaa; line-height:1.8; font-size:1.05rem;'>{proj['descricao_longa']}</p>", unsafe_allow_html=True)
-        
-    with col_tech:
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        st.markdown("<h3>Memorial Descritivo da Renderização</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:#aaa; line-height:1.8;'>{proj['descricao_longa']}</p>", unsafe_allow_html=True)
+    with c2:
         st.markdown("""
             <div style='background:#111; border:1px solid #222; padding:25px; border-radius:6px;'>
-                <h4 style='color:#d4af37 !important; border-bottom:1px solid #333; padding-bottom:10px; margin-top:0;'>Ficha Técnica do Render</h4>
+                <h4 style='color:#d4af37 !important; border-bottom:1px solid #333; padding-bottom:10px; margin-top:0;'>Ficha Técnica</h4>
         """, unsafe_allow_html=True)
-        
-        st.markdown(f"<p style='color:#888; font-size:0.9rem; margin-bottom:2px;'><b>Software Engine:</b></p><p style='color:#ccc; margin-bottom:15px;'>{proj['software']}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:#888; font-size:0.9rem; margin-bottom:2px;'><b>Tempo de Renderização:</b></p><p style='color:#ccc; margin-bottom:15px;'>{proj['tempo_render']}</p>", unsafe_allow_html=True)
-        
-        st.markdown("<p style='color:#888; font-size:0.9rem; margin-bottom:8px;'><b>Materiais Simulados (PBR):</b></p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:#888; font-size:0.9rem; margin-bottom:0;'>Processamento:</p><p style='color:#ccc;'>{proj['tempo_render']}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:#888; font-size:0.9rem; margin-bottom:0;'>Softwares Usados:</p><p style='color:#ccc;'>{proj['software']}</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#888; font-size:0.9rem; margin-bottom:5px;'>Materiais e Texturas (PBR):</p>", unsafe_allow_html=True)
         for mat in proj['materiais']:
             st.markdown(f"<span style='display:inline-block; background:#1a1a1a; border:1px solid #333; color:#aaa; font-size:0.8rem; padding:4px 8px; border-radius:4px; margin:2px;'>{mat}</span>", unsafe_allow_html=True)
-            
         st.markdown("</div>", unsafe_allow_html=True)
 
+def page_imersao():
+    """NOVA ABA: Módulo de Experiências de Vídeo e Tour 360 Graus via Iframe."""
+    st.markdown("<h1>Experiências Imersivas</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#888; font-size:1.1rem; margin-bottom:40px;'>Vá além das imagens estáticas. Impressione seu cliente final com tours interativos pelo ambiente e animações em vídeo fotorrealistas.</p>", unsafe_allow_html=True)
+    
+    # SEÇÃO 1: VÍDEO (Animação ArchViz)
+    st.markdown("<h3 style='color:#d4af37 !important;'>1. Tour Virtual em Vídeo Animado</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#aaa;'>Animação sequencial desenvolvida com renderização em tempo real. Ideal para postagens no Instagram Reels e envio via WhatsApp, garantindo um alto índice de aprovação do projeto de marcenaria.</p>", unsafe_allow_html=True)
+    
+    # Componente nativo do Streamlit para rodar vídeos (substitua a URL abaixo pelo link do YouTube do seu projeto)
+    st.video("https://www.youtube.com/watch?v=11X_N2U23zY")
+    
+    st.markdown("<br><hr style='border-color:#333;'><br>", unsafe_allow_html=True)
+    
+    # SEÇÃO 2: TOUR 360 GRAUS (Iframe Interativo)
+    st.markdown("<h3 style='color:#d4af37 !important;'>2. Tour 360º Interativo</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#aaa;'>Clique e arraste a imagem abaixo para olhar em todas as direções do projeto. Você pode enviar links como este diretamente para o celular do seu cliente para que ele utilize com óculos VR ou movendo o próprio aparelho.</p>", unsafe_allow_html=True)
+    
+    # Usando st.components.v1 para injetar o visor 360 (Neste exemplo, um link público do Kuula. Substitua pelo seu)
+    url_360 = "https://kuula.co/share/collection/7l1c9?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1"
+    components.iframe(url_360, height=600, scrolling=False)
+    
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<center><p style='color:#666;'>Os pacotes de Imersão e Animação podem ser orçados individualmente para cada ambiente planejado.</p></center>", unsafe_allow_html=True)
+
 def page_planos():
+    """Apresentação de pacotes de vendas alinhada perfeitamente com Flexbox CSS."""
     st.markdown("<h1 style='text-align:center;'>Planos e Pacotes</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#666; margin-bottom:50px;'>Escolha o formato ideal para acelerar as aprovações da sua marcenaria.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#666; margin-bottom:50px;'>Soluções direcionadas para quem busca escalar as vendas de projetos de interiores.</p>", unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
-    
     with c1:
         st.markdown("""
             <div class='pricing-card'>
                 <h3 class='pricing-title'>ArchViz Essencial</h3>
                 <div class='pricing-subtitle'>Para projetos rápidos</div>
-                <p style='color:#888; font-size:0.9rem; height:45px;'>Ideal para apresentar aquele ambiente focado do dia a dia (cozinhas ou quartos unitários).</p>
+                <p style='color:#888; font-size:0.9rem; height:45px;'>Ideal para apresentar ambientes unitários diários (ex: uma cozinha compacta ou um dormitório).</p>
                 <div class='pricing-features'>
-                    <span>✓</span> Otimização de Arquivo Base<br>
-                    <span>✓</span> Aplicação de Texturas Reais<br>
-                    <span>✓</span> Iluminação Padrão Diurna<br>
+                    <span>✓</span> Otimização da Geometria Base<br>
+                    <span>✓</span> Aplicação de Texturas (MDFs)<br>
+                    <span>✓</span> Iluminação Padrão Global<br>
                     <span>✓</span> <b>2 Imagens Estáticas 4K</b><br>
-                    <span style='color:#555;'>✗</span> <i>Sem alterações estruturais</i>
+                    <span style='color:#555;'>✗</span> <i style='color:#666;'>Sem alterações de marcenaria</i>
                 </div>
-                <a href='https://wa.me/5514998405046?text=Ol%C3%A1,%20gostaria%20de%20solicitar%20o%20Plano%20Essencial' target='_blank' class='btn-outline' style='margin-top:auto;'>SOLICITAR</a>
+                <a href='https://wa.me/5514998405046' class='btn-outline' style='margin-top:auto;'>SOLICITAR</a>
             </div>
         """, unsafe_allow_html=True)
-
     with c2:
         st.markdown("""
             <div class='pricing-card' style='border-color: #d4af37; position: relative;'>
                 <div style='position:absolute; top:-15px; left:50%; transform:translateX(-50%); background:#d4af37; color:#000; padding:4px 15px; border-radius:20px; font-size:0.75rem; font-weight:bold;'>MAIS VENDIDO</div>
                 <h3 class='pricing-title'>Premium Marcenaria</h3>
-                <div class='pricing-subtitle'>Casa Completa</div>
-                <p style='color:#888; font-size:0.9rem; height:45px;'>O pacote definitivo para fechar projetos de alto padrão com clientes exigentes.</p>
+                <div class='pricing-subtitle'>Projetos Completos</div>
+                <p style='color:#888; font-size:0.9rem; height:45px;'>O pacote definitivo para fechar propostas de alto padrão com clientes e arquitetos exigentes.</p>
                 <div class='pricing-features'>
                     <span>✓</span> Modelagem Fina de Detalhes<br>
-                    <span>✓</span> Produção e Decoração de Cena VIP<br>
-                    <span>✓</span> Iluminação Cenográfica Avançada<br>
+                    <span>✓</span> Produção e Decoração de Cena<br>
+                    <span>✓</span> Iluminação Cenográfica<br>
                     <span>✓</span> <b>5 Imagens Estáticas 4K</b><br>
-                    <span>✓</span> 1 Rodada de Alteração de Materiais
+                    <span>✓</span> 1 Rodada de Alteração Inclusa
                 </div>
-                <a href='https://wa.me/5514998405046?text=Ol%C3%A1,%20quero%20fechar%20o%20Plano%20Premium' target='_blank' class='btn-gold' style='margin-top:auto;'>CONTRATAR AGORA</a>
+                <a href='https://wa.me/5514998405046' class='btn-gold' style='margin-top:auto;'>CONTRATAR AGORA</a>
             </div>
         """, unsafe_allow_html=True)
-
     with c3:
         st.markdown("""
             <div class='pricing-card'>
-                <h3 class='pricing-title'>Imersão 360º</h3>
+                <h3 class='pricing-title'>Imersão Absoluta</h3>
                 <div class='pricing-subtitle'>Apresentação Interativa</div>
-                <p style='color:#888; font-size:0.9rem; height:45px;'>Gere um link para o seu cliente explorar o ambiente olhando para todos os lados pelo celular.</p>
+                <p style='color:#888; font-size:0.9rem; height:45px;'>Gere links para seu cliente olhar ao redor no celular (360º) ou encante-o com vídeos do projeto.</p>
                 <div class='pricing-features'>
                     <span>✓</span> Modelagem Otimizada 360<br>
-                    <span>✓</span> Renderização Esférica<br>
-                    <span>✓</span> Criação de Link Interativo<br>
-                    <span>✓</span> <b>1 Ambiente 360 Completo</b><br>
-                    <span>✓</span> Hospedagem do Link (6 meses)
+                    <span>✓</span> Renderização Esférica HDR<br>
+                    <span>✓</span> Setup de Link Web Interativo<br>
+                    <span>✓</span> <b>Ambiente 360 / Tour de Vídeo</b><br>
+                    <span>✓</span> Servidor Ativo (6 meses)
                 </div>
-                <a href='https://wa.me/5514998405046?text=Ol%C3%A1,%20gostaria%20de%20saber%20mais%20sobre%20o%20Tour%20360' target='_blank' class='btn-outline' style='margin-top:auto;'>SABER MAIS</a>
+                <a href='https://wa.me/5514998405046' class='btn-outline' style='margin-top:auto;'>SABER MAIS</a>
             </div>
         """, unsafe_allow_html=True)
 
 def page_metodologia():
+    """Workflow do Estúdio"""
     st.markdown("<h1>Nossa Metodologia</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#888; font-size:1.1rem;'>Do recebimento do arquivo à entrega do render fotorealista.</p><br>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#888;'>Pipeline técnico do Palladium Studio para garantir o mais puro fotorealismo, otimizando seu tempo.</p><br>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([1.5, 1])
-    
     with col1:
         st.markdown("""
-            <div class='timeline-step'>
-                <div class='timeline-title'>1. Briefing e Recebimento do Arquivo</div>
-                <div class='timeline-desc'>Recebemos seu projeto em SketchUp, Promob ou apenas a planta baixa. Discutimos referências, estilo de decoração e paleta de materiais do seu cliente.</div>
-            </div>
-            <div class='timeline-step'>
-                <div class='timeline-title'>2. Clay Render (Aprovação de Câmera)</div>
-                <div class='timeline-desc'>Realizamos a otimização da malha 3D e enviamos imagens "brancas" (Clay Render) apenas com o estudo da luz natural e posição das câmeras para sua aprovação geométrica.</div>
-            </div>
-            <div class='timeline-step'>
-                <div class='timeline-title'>3. Setup de Materiais PBR e Decoração</div>
-                <div class='timeline-desc'>Aplicamos os mapas de textura físicos (PBR - Physically Based Rendering). Isso significa que uma madeira terá reflexo diferente de um metal ou couro, garantindo realismo. Populamos a cena com decorações de alto nível.</div>
-            </div>
-            <div class='timeline-step'>
-                <div class='timeline-title'>4. Prévias em Baixa Resolução</div>
-                <div class='timeline-desc'>Enviamos as primeiras imagens já texturizadas e iluminadas (em qualidade baixa, para ser rápido) para que você faça os ajustes finos antes do render final pesado.</div>
-            </div>
-            <div class='timeline-step' style='border-left: 2px solid transparent;'>
-                <div class='timeline-title'>5. Processamento 4K e Pós-Produção</div>
-                <div class='timeline-desc'>Rodamos as imagens no motor de renderização (V-Ray, Corona). O material bruto vai para o Photoshop para correção de cores, contraste, brilho global (LUTs) e adição de nitidez. O projeto final é entregue via link de alta velocidade.</div>
-            </div>
+            <div class='timeline-step'><div class='timeline-title'>1. Briefing de Materiais</div><div class='timeline-desc'>Recebemos seu projeto (.SKP) e as referências de chapas (Arauco, Guararapes) e pedras.</div></div>
+            <div class='timeline-step'><div class='timeline-title'>2. Setup PBR Físico</div><div class='timeline-desc'>Aplicamos os mapas de textura. A madeira terá o reflexo exato do catálogo, diferente do metal ou do couro.</div></div>
+            <div class='timeline-step'><div class='timeline-title'>3. Clay Render de Aprovação</div><div class='timeline-desc'>Enviamos imagens "brancas" com iluminação natural para você aprovar o posicionamento das câmeras.</div></div>
+            <div class='timeline-step' style='border-left: 2px solid transparent;'><div class='timeline-title'>4. Finalização 4K</div><div class='timeline-desc'>Processamento em servidor dedicado (V-Ray/Corona) e pós-produção profissional.</div></div>
         """, unsafe_allow_html=True)
-
     with col2:
-        st.image("https://images.unsplash.com/photo-1542621323-23e5361b1716?q=80&w=800", caption="Configuração de Materiais no Engine", use_container_width=True)
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.image("https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=800", caption="Foco e Enquadramento Técnico", use_container_width=True)
+        st.image("https://images.unsplash.com/photo-1542621323-23e5361b1716?auto=format&fit=crop&w=1200&q=80", use_container_width=True)
 
 def page_contato():
+    """Página final otimizada para Desktop/Mobile (Sem erros de rodapé)"""
     st.markdown("<h1>Direto ao Ponto.</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#888; font-size:1.1rem; margin-bottom:40px;'>Entre em contato para avaliar projetos ou discutir parcerias de longo prazo.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#888; margin-bottom:40px;'>Terceirize o estresse da renderização e foque no que importa: captar novos clientes de marcenaria.</p>", unsafe_allow_html=True)
     
-    c1, c2 = st.columns([1, 1.2])
-    
+    c1, c2 = st.columns([1, 1])
     with c1:
         st.markdown("""
             <div style='background:#111; padding:40px; border-radius:6px; border:1px solid #222;'>
                 <h3 style='margin-top:0; color:#d4af37 !important;'>Central de Atendimento</h3>
                 <p style='color:#aaa; line-height:2;'>
-                    📍 <b>Sede Física:</b> Ourinhos, SP<br>
-                    🌍 <b>Atendimento:</b> Todo o Brasil (Remoto)<br>
-                    📧 <b>E-mail:</b> comercial@palladiumstudio.com<br>
-                    📱 <b>WhatsApp Oficial:</b> (14) 99840-5046
+                    📍 <b>Operação Sede:</b> Ourinhos, SP<br>
+                    🌍 <b>Atendimento Virtual:</b> Nível Nacional<br>
+                    📧 <b>Contato Eletrônico:</b> comercial@palladiumstudio.com<br>
+                    📱 <b>Link Direto WhatsApp:</b> (14) 99840-5046
                 </p>
             </div>
         """, unsafe_allow_html=True)
-        
         link = "https://wa.me/5514998405046"
-        st.markdown(f'<a href="{link}" target="_blank" class="btn-gold" style="margin-top:20px;">INICIAR CONVERSA NO WHATSAPP</a>', unsafe_allow_html=True)
+        st.markdown(f'<a href="{link}" target="_blank" class="btn-gold" style="margin-top:20px;">CHAMAR EQUIPE NO WHATSAPP</a>', unsafe_allow_html=True)
 
     with c2:
-        st.markdown("<h3 style='margin-top:0;'>Informações Comuns</h3>", unsafe_allow_html=True)
-        with st.expander("Qual o prazo médio de entrega?"):
-            st.write("Para projetos de pacote 'ArchViz Marcenaria' (1 a 2 ambientes), a primeira prévia é entregue em até 48 horas úteis após o recebimento completo dos arquivos e briefing.")
-        with st.expander("Quais os métodos de pagamento aceitos?"):
-            st.write("Trabalhamos com Pix ou Transferência Bancária. O formato padrão do mercado é 50% de sinalização para início dos trabalhos e 50% após a aprovação final, na entrega dos arquivos 4K sem marca d'água.")
-        with st.expander("Fazem modelagem do zero apenas com planta baixa?"):
-            st.write("Sim! No pacote 'ArchViz Arquiteto' nós levantamos as paredes 3D, inserimos os móveis conforme as medidas do seu croqui e aplicamos o layout solicitado.")
-        with st.expander("Vocês entregam o arquivo fonte (3D)?"):
-            st.write("A entrega padrão do estúdio é a mídia final (Imagens JPG 4K ou Links 360). O arquivo fonte (.skp, .max) configurado com nossos assets de estúdio não é comercializado, sendo propriedade intelectual do Palladium Studio.")
+        with st.expander("Fazem modelagem 3D do zero através da planta baixa?"):
+            st.write("Sim. Levantamos as paredes 3D, inserimos o design de interiores baseando-se no seu croqui em DWG/PDF e aplicamos o layout solicitado.")
+        with st.expander("Qual o prazo de entrega das perspectivas?"):
+            st.write("Para projetos padrão (1 ou 2 ambientes de planejamento), a primeira prévia é entregue em até 48 horas úteis após o envio dos modelos base.")
+        with st.expander("Vocês me entregam o arquivo SketchUp pronto?"):
+            st.write("Nossa entrega comercial é a mídia renderizada (Imagens 4K, Vídeos ou Links 360). O arquivo raiz configurado não é comercializado por conter assets intelectuais proprietários do nosso banco de estúdio.")
 
 # ==============================================================================
 # 6. ROTEADOR PRINCIPAL E MENU LATERAL
@@ -675,34 +883,28 @@ def main():
     injetar_css_premium()
     
     with st.sidebar:
-        st.markdown("<h1 style='text-align:center; font-size: 2.2rem;'>PALLADIUM</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align:center; color:#555; font-size:0.7rem; letter-spacing:5px;'>ARCHVIZ STUDIO</p>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align:center; font-size: 2.2rem; margin-bottom:0;'>PALLADIUM</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:center; color:#555; font-size:0.7rem; letter-spacing:5px; margin-top:0;'>ARCHVIZ STUDIO</p>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Limpeza profunda de estados inativos ao alternar telas
+        if st.button("INÍCIO"): st.session_state.update({'projeto_selecionado': None, 'page': 'Início'})
+        if st.button("PORTFÓLIO"): st.session_state.update({'projeto_selecionado': None, 'page': 'Portfólio'})
+        if st.button("IMERSÃO 360 / VÍDEO"): st.session_state.update({'projeto_selecionado': None, 'page': 'Imersão'})
+        if st.button("PLANOS E PACOTES"): st.session_state.update({'projeto_selecionado': None, 'page': 'Planos'})
+        if st.button("METODOLOGIA TÉCNICA"): st.session_state.update({'projeto_selecionado': None, 'page': 'Metodologia'})
+        if st.button("ORÇAMENTO & CONTATO"): st.session_state.update({'projeto_selecionado': None, 'page': 'Contato'})
+        
+        # FOOTER DA SIDEBAR LIVRE DE ERROS DE SOBREPOSIÇÃO
         st.markdown("<br><br>", unsafe_allow_html=True)
-        
-        if st.button("INÍCIO"): 
-            st.session_state['projeto_selecionado'] = None
-            st.session_state['page'] = 'Início'
-        if st.button("PORTFÓLIO"): 
-            st.session_state['projeto_selecionado'] = None
-            st.session_state['page'] = 'Portfólio'
-        if st.button("PLANOS E PACOTES"): 
-            st.session_state['projeto_selecionado'] = None
-            st.session_state['page'] = 'Planos'
-        if st.button("METODOLOGIA"): 
-            st.session_state['projeto_selecionado'] = None
-            st.session_state['page'] = 'Metodologia'
-        if st.button("CONTATO"): 
-            st.session_state['projeto_selecionado'] = None
-            st.session_state['page'] = 'Contato'
-        
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
-        link_wpp = "https://wa.me/5514998405046"
-        st.markdown(f'<a href="{link_wpp}" target="_blank" class="btn-gold" style="padding: 15px;">FALAR COM EQUIPE</a>', unsafe_allow_html=True)
+        st.markdown('<a href="https://wa.me/5514998405046" target="_blank" class="btn-gold">SOLICITAR ANÁLISE</a>', unsafe_allow_html=True)
         
         st.markdown("""
-            <div style='position: absolute; bottom: 20px; width: 100%; text-align: center; color: #333; font-size: 0.65rem; letter-spacing: 1px;'>
-                PALLADIUM STUDIO © 2026<br>
-                ARCHITECTURE VISUALIZATION
+            <div class="sidebar-footer">
+                <p style='color: #444; font-size: 0.65rem; letter-spacing: 1px; margin:0;'>
+                    PALLADIUM STUDIO © 2026<br>
+                    ARCHITECTURE VISUALIZATION
+                </p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -713,6 +915,7 @@ def main():
         if page == 'Início': page_home()
         elif page == 'Portfólio': page_portfolio()
         elif page == 'Detalhes do Projeto': page_projeto_detalhe()
+        elif page == 'Imersão': page_imersao()
         elif page == 'Planos': page_planos()
         elif page == 'Metodologia': page_metodologia()
         elif page == 'Contato': page_contato()
