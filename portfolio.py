@@ -17,38 +17,31 @@ st.set_page_config(
 def injetar_css_premium():
     st.markdown("""
         <style>
-        /* Tipografia Premium */
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
-        /* Variáveis de Cor */
         :root {
             --bg-color: #0d0d0d;
             --text-main: #f2f2f2;
             --text-muted: #888888;
-            --accent: #d4af37; /* Dourado Palladium */
+            --accent: #d4af37; 
             --card-bg: #1a1a1a;
-            --border: #333333;
+            --border: #222222;
         }
 
-        /* Reset e Base */
         html, body, [class*="css"] {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color) !important;
             color: var(--text-main) !important;
         }
 
-        /* Ocultar elementos padrão do Streamlit */
         #MainMenu, header, footer {visibility: hidden;}
 
-        /* Tipografia de Títulos */
         h1, h2, h3 {
             font-family: 'Cinzel', serif !important;
             font-weight: 600 !important;
-            letter-spacing: 1px;
             color: #ffffff !important;
         }
 
-        /* Título Principal (Hero) */
         .hero-title {
             font-size: 4.5rem !important;
             text-align: center;
@@ -56,7 +49,6 @@ def injetar_css_premium():
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 0;
-            padding-bottom: 0;
         }
         .hero-subtitle {
             font-size: 1.2rem;
@@ -69,7 +61,6 @@ def injetar_css_premium():
             margin-bottom: 40px;
         }
 
-        /* Cards de Projetos (Efeito Glassmorphism e Hover) */
         .project-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -82,7 +73,7 @@ def injetar_css_premium():
         .project-card:hover {
             transform: translateY(-10px);
             border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
         }
         .project-title {
             font-family: 'Cinzel', serif;
@@ -91,24 +82,14 @@ def injetar_css_premium():
             margin-bottom: 5px;
             color: var(--accent);
         }
-        .project-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
+        .project-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
         .project-tags {
-            font-size: 0.75rem;
-            color: #aaaaaa;
-            background: #222;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 10px;
-            margin-right: 5px;
-            border: 1px solid #444;
+            font-size: 0.75rem; color: #aaaaaa; background: #111;
+            padding: 4px 8px; border-radius: 4px; display: inline-block;
+            margin-top: 10px; margin-right: 5px; border: 1px solid #333;
         }
 
-        /* Estilização da Sidebar */
+        /* --- NOVO ESTILO DA SIDEBAR --- */
         [data-testid="stSidebar"] {
             background-color: #050505 !important;
             border-right: 1px solid var(--border);
@@ -117,10 +98,10 @@ def injetar_css_premium():
             color: var(--accent) !important;
             text-align: center;
             font-size: 2rem !important;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
-        /* Botões Premium */
+        /* Estilo dos botões gerais da página (ex: "Ver Portfólio") */
         .stButton>button {
             background-color: transparent !important;
             color: var(--accent) !important;
@@ -137,35 +118,44 @@ def injetar_css_premium():
         .stButton>button:hover {
             background-color: var(--accent) !important;
             color: #000000 !important;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3) !important;
         }
 
-        /* Expanders (FAQ) */
+        /* ESTILO EXCLUSIVO PARA OS BOTÕES DA SIDEBAR (MINIMALISTAS) */
+        [data-testid="stSidebar"] .stButton>button {
+            background-color: transparent !important;
+            color: #aaaaaa !important;
+            border: none !important;
+            border-left: 3px solid transparent !important; /* Borda invisível para manter alinhamento */
+            text-align: left !important;
+            padding: 10px 15px !important;
+            font-size: 0.95rem !important;
+            letter-spacing: 3px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        [data-testid="stSidebar"] .stButton>button:hover {
+            background-color: transparent !important;
+            color: #ffffff !important;
+            border-left: 3px solid var(--accent) !important; /* Destaque lateral elegante */
+            transform: translateX(8px); /* Efeito de empurrar o texto levemente */
+            box-shadow: none !important;
+        }
+        [data-testid="stSidebar"] p {
+            margin-bottom: 0 !important;
+        }
+
         .streamlit-expanderHeader {
             font-family: 'Inter', sans-serif !important;
-            font-weight: 500 !important;
-            color: #ffffff !important;
-            background-color: var(--card-bg) !important;
-            border: 1px solid var(--border) !important;
+            font-weight: 500 !important; color: #ffffff !important;
+            background-color: var(--card-bg) !important; border: 1px solid var(--border) !important;
         }
-        
-        /* Divisores */
-        hr {
-            border-color: #333333 !important;
-            margin: 40px 0 !important;
-        }
-
-        /* Estatísticas */
+        hr { border-color: #222222 !important; margin: 40px 0 !important; }
         .stat-box {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(145deg, #111, #1a1a1a);
-            border: 1px solid #333;
-            border-radius: 8px;
+            text-align: center; padding: 20px; background: #0a0a0a;
+            border: 1px solid #222; border-radius: 4px;
         }
         .stat-number { font-family: 'Cinzel', serif; font-size: 3rem; color: var(--accent); margin:0;}
-        .stat-label { font-size: 0.9rem; color: #888; text-transform: uppercase; letter-spacing: 1px;}
-        
+        .stat-label { font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px;}
         </style>
     """, unsafe_allow_html=True)
 
@@ -417,52 +407,40 @@ def render_footer():
 # ==========================================
 def main():
     injetar_css_premium()
-    
-    # Inicializa banco de dados
     db = carregar_banco_dados()
     
-    # Controle de navegação via session_state para permitir botões mudarem de página
     if 'page' not in st.session_state:
         st.session_state['page'] = 'Início'
         
-    # Navegação na Sidebar
     with st.sidebar:
         st.markdown("<h1>PALLADIUM</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align:center; color:#555; font-size:0.8rem; letter-spacing:2px; margin-top:-15px; margin-bottom:30px;'>STUDIO</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:center; color:#555; font-size:0.75rem; letter-spacing:4px; margin-top:-15px; margin-bottom:40px;'>STUDIO</p>", unsafe_allow_html=True)
         
-        # Botões de navegação customizados
-        if st.button("🏠 Início"): st.session_state['page'] = 'Início'
-        if st.button("🖼️ Portfólio"): st.session_state['page'] = 'Portfólio'
-        if st.button("🏛️ O Estúdio"): st.session_state['page'] = 'Sobre'
-        if st.button("📩 Contato"): st.session_state['page'] = 'Contato'
+        # Botões refeitos: sem emojis, focando na tipografia
+        if st.button("INÍCIO"): st.session_state['page'] = 'Início'
+        if st.button("PORTFÓLIO"): st.session_state['page'] = 'Portfólio'
+        if st.button("METODOLOGIA"): st.session_state['page'] = 'Sobre'
+        if st.button("CONTATO"): st.session_state['page'] = 'Contato'
         
+        # Texto de versão reestruturado para não encavalar
         st.markdown("""
-            <div style='position: absolute; bottom: 20px; width: 100%; text-align: center; color: #444; font-size: 0.75rem;'>
-                System v2.5.0<br>
-                Render Engine: Ready
+            <div style='margin-top: 80px; text-align: center; color: #333; font-size: 0.70rem; letter-spacing: 1px;'>
+                ARCHVIZ SYSTEM v2.5<br>
+                RENDER ENGINE: ONLINE
             </div>
         """, unsafe_allow_html=True)
 
-    # Roteador de Telas
     page = st.session_state['page']
     
-    # Envolve o conteúdo em um container principal para margens perfeitas
     with st.container():
         st.markdown("<div style='padding: 2% 5%;'>", unsafe_allow_html=True)
-        
-        if page == 'Início':
-            render_home(db)
-        elif page == 'Portfólio':
-            render_portfolio(db)
-        elif page == 'Sobre':
-            render_about()
-        elif page == 'Contato':
-            render_contact()
-            
+        if page == 'Início': render_home(db)
+        elif page == 'Portfólio': render_portfolio(db)
+        elif page == 'Sobre': render_about()
+        elif page == 'Contato': render_contact()
         st.markdown("</div>", unsafe_allow_html=True)
         
     render_footer()
 
-# Execução do script
 if __name__ == "__main__":
     main()
