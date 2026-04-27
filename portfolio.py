@@ -1,5 +1,5 @@
 """
-PALLADIUM STUDIO - PORTFÓLIO WEB ENGINE v3.0
+PALLADIUM STUDIO - PORTFÓLIO WEB ENGINE v3.1 (Cloud Optimized)
 Desenvolvido para: Pedro Teixeira | Palladium Studio
 Arquitetura: Programação Orientada a Objetos (POO) com Streamlit
 Foco: Alta Marcenaria & Architectural Visualization (ArchViz)
@@ -10,8 +10,19 @@ import time
 import streamlit.components.v1 as components
 
 # ==============================================================================
+# 1. CONFIGURAÇÃO DE AMBIENTE
+# ==============================================================================
+st.set_page_config(
+    page_title="Palladium Studio | Premium ArchViz",
+    page_icon="🏛️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# ==============================================================================
 # CLASS: DATABASE_MANAGER
 # Responsável pela gestão, curadoria e integridade dos dados dos projetos.
+# URLs migradas para servidor seguro (Pexels) para evitar bloqueio Anti-Hotlink.
 # ==============================================================================
 class DatabaseManager:
     """
@@ -20,11 +31,17 @@ class DatabaseManager:
     """
 
     @staticmethod
+    def get_angles(pexels_id):
+        """
+        Gera as 4 perspectivas simuladas para o projeto baseado no ID seguro.
+        """
+        base_url = f"https://images.pexels.com/photos/{pexels_id}/pexels-photo-{pexels_id}.jpeg?auto=compress&cs=tinysrgb&w=1200"
+        # Em produção real, você substituirá por 4 links distintos do seu Behance/Google Drive.
+        return [base_url, base_url, base_url, base_url]
+
+    @staticmethod
     def get_interiores():
-        """
-        Retorna a lista de 15 projetos de interiores com descrições técnicas precisas.
-        Cada projeto contém 4 ângulos de câmera (IDs únicos).
-        """
+        """Retorna a lista de 15 projetos de interiores com descrições técnicas precisas."""
         return [
             {
                 "id": "INT_001",
@@ -36,12 +53,7 @@ class DatabaseManager:
                 "materiais": ["MDF Preto Silk", "Quartzo Cinza", "Puxador Cava", "LED 3000K"],
                 "software": "SketchUp + V-Ray 6 + Photoshop",
                 "tempo_render": "3h 45m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1556911220-e15022357539?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1556911261-6bd341186b2f?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1556909190-eccf4a8bf97a?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("3214090") # Cozinha escura
             },
             {
                 "id": "INT_002",
@@ -53,12 +65,7 @@ class DatabaseManager:
                 "materiais": ["MDF Freijó", "Linho Cru", "Laca Cinza Fosca"],
                 "software": "3ds Max + Corona Renderer",
                 "tempo_render": "5h 20m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1616594111750-4744bda7e9a2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1743229") # Quarto Premium
             },
             {
                 "id": "INT_003",
@@ -70,12 +77,7 @@ class DatabaseManager:
                 "materiais": ["MDF Carvalho", "Mármore Calacatta", "Vidro Laminado"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "4h 10m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607688066-2405894e4bd5?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1571460") # Sala ampla
             },
             {
                 "id": "INT_004",
@@ -87,12 +89,7 @@ class DatabaseManager:
                 "materiais": ["MDF Ultra", "Mármore Branco", "Metais Gold"],
                 "software": "3ds Max + Corona",
                 "tempo_render": "6h 15m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1603912975949-c1e1e0a29363?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1620626011761-9963d7b59a7a?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1910472") # Banheiro
             },
             {
                 "id": "INT_005",
@@ -104,12 +101,7 @@ class DatabaseManager:
                 "materiais": ["MDF Grafite", "Madeira de Demolição", "Metalon"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "4h 30m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1556912998-c57cc6b63ce7?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1565183928294-7063f23ce0f8?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("3144580") # Área Gourmet
             },
             {
                 "id": "INT_006",
@@ -121,12 +113,7 @@ class DatabaseManager:
                 "materiais": ["MDF Freijó", "Laca Preta", "LED Linear"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "3h 50m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1957478") # Escritório
             },
             {
                 "id": "INT_007",
@@ -138,12 +125,7 @@ class DatabaseManager:
                 "materiais": ["Vidro Reflecta", "MDF Cinza", "Esquadria Alumínio"],
                 "software": "SketchUp + Enscape",
                 "tempo_render": "1h 55m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("932095") # Closet
             },
             {
                 "id": "INT_008",
@@ -155,12 +137,7 @@ class DatabaseManager:
                 "materiais": ["Palhinha Indiana", "Nogueira", "Mármore Travertino"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "5h 15m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1617806118233-18e16208a50a?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1540932239986-30128078f3b5?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("2724749") # Jantar
             },
             {
                 "id": "INT_009",
@@ -172,12 +149,7 @@ class DatabaseManager:
                 "materiais": ["Laca Rosa", "MDF Carvalho Munique", "Algodão"],
                 "software": "3ds Max + V-Ray",
                 "tempo_render": "3h 40m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1520699049698-acd2fccb8cc8?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1520699049698-acd2fccb8cc8?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1505692952047-1a78307da8f2?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("3661202") # Infantil
             },
             {
                 "id": "INT_010",
@@ -189,12 +161,7 @@ class DatabaseManager:
                 "materiais": ["Cumaru Maciço", "Tijolo Inglês", "Vidro Duplo"],
                 "software": "3ds Max + V-Ray",
                 "tempo_render": "6h 50m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1585553616435-2dc0a54e271d?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1565183928294-7063f23ce0f8?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("2903160") # Adega/Bar
             },
             {
                 "id": "INT_011",
@@ -206,12 +173,7 @@ class DatabaseManager:
                 "materiais": ["MDF Lacca", "Espelho Prata", "Granito Polido"],
                 "software": "SketchUp + Corona",
                 "tempo_render": "2h 45m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1583847268964-b28dc2f51ac9?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("2724748") # Hall
             },
             {
                 "id": "INT_012",
@@ -223,12 +185,7 @@ class DatabaseManager:
                 "materiais": ["MDF Branco Ártico", "Bancada Corian", "Rodapés Alumínio"],
                 "software": "SketchUp + Enscape",
                 "tempo_render": "1h 10m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1521783593447-5702b9bfd267?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1556911220-e15022357539?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("2253643") # Serviço
             },
             {
                 "id": "INT_013",
@@ -240,12 +197,7 @@ class DatabaseManager:
                 "materiais": ["MDF Carvalho", "Metal Preto", "Piso Vinílico"],
                 "software": "3ds Max + Corona",
                 "tempo_render": "6h 20m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("133458") # Biblioteca
             },
             {
                 "id": "INT_014",
@@ -257,12 +209,7 @@ class DatabaseManager:
                 "materiais": ["Laminado Branco", "MDF Claro", "Porcelanato"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "3h 45m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("37347") # Recepção
             },
             {
                 "id": "INT_015",
@@ -274,21 +221,13 @@ class DatabaseManager:
                 "materiais": ["Laca Alto Brilho", "MDF Grafite", "Couro Preto"],
                 "software": "3ds Max + V-Ray",
                 "tempo_render": "5h 55m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1593910265171-ef6709849202?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1090638") # HT
             }
         ]
 
     @staticmethod
     def get_exteriores():
-        """
-        Retorna a lista de 10 projetos de arquitetura externa.
-        Curadoria de IDs focados em fachadas residenciais e comerciais.
-        """
+        """Retorna a lista de 10 projetos de arquitetura externa."""
         return [
             {
                 "id": "EXT_001",
@@ -300,12 +239,7 @@ class DatabaseManager:
                 "materiais": ["Alumínio Amadeirado", "Concreto", "Esquadria Preta"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "5h 30m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("106399") # Casa Contemporanea
             },
             {
                 "id": "EXT_002",
@@ -317,12 +251,7 @@ class DatabaseManager:
                 "materiais": ["Madeira Itaúba", "Pastilha Cerâmica", "Mármore Branco"],
                 "software": "3ds Max + Corona Renderer",
                 "tempo_render": "7h 45m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("221453") # Piscina
             },
             {
                 "id": "EXT_003",
@@ -334,12 +263,7 @@ class DatabaseManager:
                 "materiais": ["Vidro Refletivo", "ACM Preto", "Concreto"],
                 "software": "3ds Max + V-Ray",
                 "tempo_render": "6h 55m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497215898141-86daaa72295d?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("374870") # Predio
             },
             {
                 "id": "EXT_004",
@@ -351,12 +275,7 @@ class DatabaseManager:
                 "materiais": ["Pedra Moledo", "Vigas Eucalipto", "Telha Shingle"],
                 "software": "3ds Max + Corona Renderer",
                 "tempo_render": "8h 10m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1500313830540-7b6650a74fd0?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("258154") # Campo
             },
             {
                 "id": "EXT_005",
@@ -368,12 +287,7 @@ class DatabaseManager:
                 "materiais": ["Corda Náutica", "Deck Sintético", "Vidro Temperado"],
                 "software": "SketchUp + Enscape",
                 "tempo_render": "1h 35m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1643384") # Rooftop
             },
             {
                 "id": "EXT_006",
@@ -385,12 +299,7 @@ class DatabaseManager:
                 "materiais": ["Aço Corten", "Vidro Blindado", "Pedra Portuguesa"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "4h 05m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("209296") # Entrada
             },
             {
                 "id": "EXT_007",
@@ -402,12 +311,7 @@ class DatabaseManager:
                 "materiais": ["Tinta Branca", "MDF Naval", "Iluminação IES"],
                 "software": "3ds Max + V-Ray",
                 "tempo_render": "6h 35m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("323780") # Noturna
             },
             {
                 "id": "EXT_008",
@@ -419,12 +323,7 @@ class DatabaseManager:
                 "materiais": ["Tijolo Inglês", "Metalon Grafite", "Vidro Canelado"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "4h 55m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("2242475") # Industrial
             },
             {
                 "id": "EXT_009",
@@ -436,12 +335,7 @@ class DatabaseManager:
                 "materiais": ["MDF Naval", "Porcelanato Amadeirado", "Vidro Reiki"],
                 "software": "3ds Max + Corona",
                 "tempo_render": "4h 30m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1571463") # Varanda
             },
             {
                 "id": "EXT_010",
@@ -453,12 +347,7 @@ class DatabaseManager:
                 "materiais": ["Madeira Cumaru", "Pedra Vulcânica", "Jardim Vertical"],
                 "software": "SketchUp + V-Ray",
                 "tempo_render": "5h 50m",
-                "imgs": [
-                    "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1500313830540-7b6650a74fd0?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1590060417603-eb1593d04976?auto=format&fit=crop&w=1200&q=80"
-                ]
+                "imgs": DatabaseManager.get_angles("1080721") # Jardim
             }
         ]
 
@@ -467,46 +356,33 @@ class DatabaseManager:
 # Responsável pelo motor visual, injeção de CSS e estabilidade de layout.
 # ==============================================================================
 class AppInterface:
-    """
-    Define o framework visual do Palladium Studio.
-    Garante que o design seja profissional em qualquer dispositivo.
-    """
+    """Define o framework visual do Palladium Studio."""
 
     @staticmethod
     def initialize_theme():
-        """
-        Injeta o código CSS customizado para forçar o Dark Mode Premium.
-        Remove elementos indesejados da interface padrão do Streamlit.
-        """
         st.markdown("""
             <style>
-            /* Tipografia Corporativa */
             @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
-            /* Framework de Cores Palladium */
             :root {
                 --bg-color: #080808;
                 --text-main: #f2f2f2;
                 --text-muted: #888888;
                 --accent: #d4af37; 
-                --accent-hover: #e8c85c;
                 --card-bg: #111111;
                 --card-hover: #161616;
                 --border: #222222;
             }
 
-            /* Configuração Global */
             html, body, [class*="css"] {
                 font-family: 'Inter', sans-serif;
                 background-color: var(--bg-color) !important;
                 color: var(--text-main) !important;
             }
 
-            /* Estabilidade de Header e Sidebar */
             header {background-color: transparent !important;}
             #MainMenu, footer {visibility: hidden;}
 
-            /* Títulos e Tipografia */
             h1, h2, h3, h4 {
                 font-family: 'Cinzel', serif !important;
                 font-weight: 600 !important;
@@ -516,61 +392,33 @@ class AppInterface:
 
             /* HERO SECTION */
             .hero-title {
-                text-align: center;
-                font-size: 4.5rem;
-                margin-top: 20px;
-                color: #ffffff;
-                font-family: 'Cinzel', serif;
+                text-align: center; font-size: 4.5rem; margin-top: 20px;
+                color: #ffffff; font-family: 'Cinzel', serif;
             }
             .hero-subtitle {
-                text-align: center;
-                color: #888;
-                font-size: 1.1rem;
-                letter-spacing: 8px;
-                margin-top: 5px;
-                margin-bottom: 40px;
+                text-align: center; color: #888; font-size: 1.1rem;
+                letter-spacing: 8px; margin-top: 5px; margin-bottom: 40px;
             }
 
             /* GRID SYSTEM */
             .project-card {
-                background: var(--card-bg);
-                border: 1px solid var(--border);
-                border-radius: 6px;
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                margin-bottom: 30px;
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                overflow: hidden;
+                background: var(--card-bg); border: 1px solid var(--border);
+                border-radius: 6px; transition: all 0.4s ease; margin-bottom: 30px;
+                display: flex; flex-direction: column; height: 100%; overflow: hidden;
             }
             .project-card:hover {
-                border-color: var(--accent);
-                transform: translateY(-8px);
-                box-shadow: 0 15px 35px rgba(212, 175, 55, 0.1);
-                background: var(--card-hover);
+                border-color: var(--accent); transform: translateY(-8px);
+                box-shadow: 0 15px 35px rgba(212, 175, 55, 0.1); background: var(--card-hover);
             }
-            .img-container {
-                width: 100%;
-                aspect-ratio: 16/9;
-                overflow: hidden;
-                background: #1a1a1a;
-            }
-            .img-container img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 1.2s ease;
-            }
+            .img-container { width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #1a1a1a; }
+            .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s ease; }
             .project-card:hover img { transform: scale(1.05); }
             .card-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
             .project-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 10px; }
             .project-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; flex-grow: 1; }
 
-            /* SIDEBAR CUSTOMIZATION */
-            [data-testid="stSidebar"] { 
-                background-color: #050505 !important; 
-                border-right: 1px solid var(--border); 
-            }
+            /* SIDEBAR SECURE */
+            [data-testid="stSidebar"] { background-color: #050505 !important; border-right: 1px solid var(--border); }
             [data-testid="stSidebar"] .stButton>button {
                 background-color: transparent !important; color: #666 !important;
                 border: none !important; border-left: 3px solid transparent !important;
@@ -583,23 +431,17 @@ class AppInterface:
                 background-color: #0a0a0a !important; transform: translateX(5px);
             }
 
-            .sidebar-footer {
-                padding: 20px;
-                text-align: center;
-                border-top: 1px solid #1a1a1a;
-                margin-top: 20px;
-            }
+            .sidebar-footer { padding: 20px; text-align: center; border-top: 1px solid #1a1a1a; margin-top: 20px; }
 
             /* CALL TO ACTION BUTTONS */
             .btn-gold {
                 display: block; background: var(--accent); color: #000 !important;
                 text-align: center; padding: 15px; font-weight: 700;
                 letter-spacing: 2px; text-decoration: none; text-transform: uppercase;
-                transition: 0.4s; border-radius: 3px; border: 1px solid var(--accent);
-                font-size: 0.85rem;
+                transition: 0.4s; border-radius: 3px; border: 1px solid var(--accent); font-size: 0.85rem;
             }
             .btn-gold:hover { background: #fff; border-color: #fff; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-            
+
             /* PRICING TABLES */
             .pricing-card {
                 background: #0d0d0d; border: 1px solid #333; padding: 40px 30px;
@@ -616,7 +458,6 @@ class AppInterface:
                 .pricing-card { margin-bottom: 25px; }
             }
 
-            /* Hiding Streamlit full screen buttons */
             button[title="View fullscreen"] { display: none; }
             </style>
         """, unsafe_allow_html=True)
@@ -626,16 +467,14 @@ class AppInterface:
 # Contém a lógica de renderização de cada módulo do sistema.
 # ==============================================================================
 class PageRenderer:
-    """
-    Roteador de visualização. Cada método representa uma página independente.
-    """
 
     @staticmethod
     def render_home():
-        """Renderiza a Landing Page do Estúdio."""
         st.markdown("<h1 class='hero-title'>PALLADIUM STUDIO</h1>", unsafe_allow_html=True)
         st.markdown("<p class='hero-subtitle'>ARCHVIZ PARA ALTA MARCENARIA</p>", unsafe_allow_html=True)
-        st.image("https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=80", use_container_width=True)
+        
+        # Pexels cover
+        st.image("https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1500", use_container_width=True)
         
         st.markdown("<br><h2 style='text-align:center; color:#d4af37 !important;'>O Seu Projeto, Antes de Existir.</h2>", unsafe_allow_html=True)
         st.markdown("""
@@ -654,7 +493,6 @@ class PageRenderer:
 
     @staticmethod
     def render_portfolio():
-        """Renderiza a Galeria de Projetos Interativos."""
         interiores = DatabaseManager.get_interiores()
         exteriores = DatabaseManager.get_exteriores()
         
@@ -677,7 +515,7 @@ class PageRenderer:
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-                if st.button(f"RELATÓRIO TÉCNICO", key=f"btn_{proj['id']}"):
+                if st.button(f"RELATÓRIO TÉCNICO", key=f"btn_int_{proj['id']}"):
                     st.session_state['projeto_selecionado'] = proj
                     st.session_state['page'] = 'Detalhes'
                     st.rerun()
@@ -700,14 +538,13 @@ class PageRenderer:
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-                if st.button(f"RELATÓRIO TÉCNICO", key=f"btn_{proj['id']}"):
+                if st.button(f"RELATÓRIO TÉCNICO", key=f"btn_ext_{proj['id']}"):
                     st.session_state['projeto_selecionado'] = proj
                     st.session_state['page'] = 'Detalhes'
                     st.rerun()
 
     @staticmethod
     def render_details():
-        """Renderiza a visualização profunda de um projeto (Multi-ângulo)."""
         proj = st.session_state.get('projeto_selecionado')
         if not proj:
             st.session_state['page'] = 'Portfólio'
@@ -721,7 +558,6 @@ class PageRenderer:
         st.markdown(f"<h1>Galeria Técnica: {proj['titulo']}</h1>", unsafe_allow_html=True)
         st.markdown(f"<p style='color:#d4af37; letter-spacing:3px; text-transform:uppercase;'>ESTILO: {proj['estilo']} | ENGINE: {proj['software']}</p><br>", unsafe_allow_html=True)
 
-        # Galeria de 4 Fotos (Vertical)
         for i, img_url in enumerate(proj['imgs']):
             st.image(img_url, caption=f"Perspectiva de Câmera 0{i+1} - Renderização High-End 4K", use_container_width=True)
             st.markdown("<br>", unsafe_allow_html=True)
@@ -745,11 +581,9 @@ class PageRenderer:
 
     @staticmethod
     def render_imersao():
-        """Renderiza o módulo de Imersão: Vídeo 15s + Tour 360 Real."""
         st.markdown("<h1>Experiências de Imersão</h1>", unsafe_allow_html=True)
         st.markdown("<p style='color:#888; font-size:1.1rem; margin-bottom:50px;'>Apresente seus projetos com tecnologias que vendem. Tours interativos e vídeos cinemáticos para marcenaria.</p>", unsafe_allow_html=True)
         
-        # MÓDULO 1: VÍDEO ANIMADO
         st.markdown("<h3 style='color:#d4af37 !important; margin-bottom:20px;'>1. Cinematic Tour (Vídeo Animado)</h3>", unsafe_allow_html=True)
         col_vid_txt, col_vid_main = st.columns([1, 1.5])
         with col_vid_txt:
@@ -763,24 +597,19 @@ class PageRenderer:
                 </ul>
             """, unsafe_allow_html=True)
         with col_vid_main:
-            # Exemplo de Animação ArchViz Real
             st.video("https://www.youtube.com/watch?v=11X_N2U23zY")
         
         st.markdown("<br><hr style='border-color:#333;'><br>", unsafe_allow_html=True)
         
-        # MÓDULO 2: TOUR 360 INTERATIVO (Padrão ArchViz)
         st.markdown("<h3 style='color:#d4af37 !important; margin-bottom:20px;'>2. Tour 360º de Interior Real</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#aaa;'>Clique na imagem abaixo, arraste para explorar cada canto do projeto e use o scroll para dar zoom. O seu cliente recebe um link como este diretamente no WhatsApp.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#aaa;'>Clique na imagem abaixo e arraste para explorar o projeto. Enviamos links diretos para o WhatsApp do seu cliente.</p>", unsafe_allow_html=True)
         
-        # Link do Kuula de um apartamento decorado real (Substituindo Street View por ArchViz)
+        # Link Tour 360 Kuula (Projeto ArchViz)
         tour_url = "https://kuula.co/share/collection/7l1c9?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1"
         components.iframe(tour_url, height=650, scrolling=False)
-        
-        st.markdown("<br><center><p style='color:#444; font-size:0.85rem;'>Desenvolvido com tecnologia de panorama esférico HDR.</p></center>", unsafe_allow_html=True)
 
     @staticmethod
     def render_planos():
-        """Renderiza os pacotes comerciais do estúdio."""
         st.markdown("<h1 style='text-align:center;'>Nossos Pacotes</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align:center; color:#666; margin-bottom:50px;'>Soluções desenhadas para acelerar o fechamento de orçamentos de marcenarias de alto padrão.</p>", unsafe_allow_html=True)
         
@@ -834,7 +663,6 @@ class PageRenderer:
 
     @staticmethod
     def render_contato():
-        """Renderiza a página de contato e informações operacionais."""
         st.markdown("<h1>Prospecção & Atendimento</h1>", unsafe_allow_html=True)
         st.markdown("<p style='color:#888; margin-bottom:50px;'>Pronto para elevar o nível da sua marcenaria? Entre em contato direto com nossa equipe técnica.</p>", unsafe_allow_html=True)
         
@@ -866,46 +694,44 @@ class PageRenderer:
 
 # ==============================================================================
 # MAIN FUNCTION: CONTROLADOR DE EXECUÇÃO
-# Responsável pelo ciclo de vida da aplicação.
 # ==============================================================================
 def main():
-    """
-    Função mestra que inicializa a interface e gerencia a navegação.
-    """
-    # 1. Inicializa visual
+    # 1. Correção Absoluta do KeyError (Inicia o estado DENTRO do motor principal)
+    if 'page' not in st.session_state:
+        st.session_state['page'] = 'Início'
+    if 'projeto_selecionado' not in st.session_state:
+        st.session_state['projeto_selecionado'] = None
+
+    # 2. Inicializa visual
     AppInterface.initialize_theme()
     
-    # 2. Configura Sidebar e Navegação (SEM ERROS DE SOBREPOSIÇÃO)
+    # 3. Configura Sidebar e Navegação
     with st.sidebar:
         st.markdown("<h1 style='text-align:center; font-size: 2.2rem; margin-bottom:0;'>PALLADIUM</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align:center; color:#555; font-size:0.7rem; letter-spacing:5px; margin-top:0;'>STUDIO ARCHVIZ</p>", unsafe_allow_html=True)
         st.markdown("<br><br>", unsafe_allow_html=True)
         
-        # Menu de Navegação via Botões
         if st.button("INÍCIO"): st.session_state.update({'projeto_selecionado': None, 'page': 'Início'})
         if st.button("CATÁLOGO 3D"): st.session_state.update({'projeto_selecionado': None, 'page': 'Portfólio'})
         if st.button("IMERSÃO & VÍDEO"): st.session_state.update({'projeto_selecionado': None, 'page': 'Imersão'})
         if st.button("PLANOS E PACOTES"): st.session_state.update({'projeto_selecionado': None, 'page': 'Planos'})
         if st.button("CONTATO & SUPORTE"): st.session_state.update({'projeto_selecionado': None, 'page': 'Contato'})
         
-        # Espaçamento manual flexível em vez de absoluto
         st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)
-        
         st.markdown('<a href="https://wa.me/5514998405046" target="_blank" class="btn-gold">SOLICITAR ANÁLISE</a>', unsafe_allow_html=True)
         
         st.markdown("""
             <div class="sidebar-footer">
                 <p style='color: #333; font-size: 0.65rem; letter-spacing: 1px; margin:0;'>
                     PALLADIUM STUDIO © 2026<br>
-                    ARCHITECTURE VISUALIZATION ENGINE v3.0
+                    ARCHITECTURE VISUALIZATION ENGINE v3.1
                 </p>
             </div>
         """, unsafe_allow_html=True)
 
-    # 3. Router de Páginas
+    # 4. Router de Páginas
     page = st.session_state['page']
     
-    # Renderizador centralizado em container seguro
     with st.container():
         st.markdown("<div style='padding: 1% 4% 5% 4%;'>", unsafe_allow_html=True)
         
@@ -924,6 +750,5 @@ def main():
             
         st.markdown("</div>", unsafe_allow_html=True)
 
-# Ponto de entrada do script
 if __name__ == "__main__":
     main()
