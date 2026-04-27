@@ -1,165 +1,96 @@
 import streamlit as st
 
-# Configuração da página - Wide ajuda a criar layouts melhores
-st.set_page_config(page_title="Palladium Studio | Marcenaria 3D", page_icon="🏛️", layout="wide")
+# O layout="wide" usa bem a tela do PC e se adapta no celular
+st.set_page_config(page_title="Palladium Studio | ArchViz", page_icon="🏛️", layout="wide")
 
-# --- CSS INJETADO (Visual Premium + RESPONSIVIDADE CELULAR) ---
+# --- CSS INJETADO (Apenas para fontes e botões, sem quebrar o layout nativo) ---
 st.markdown("""
     <style>
-    /* Importando fonte minimalista e elegante */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
 
-    html, body, [class*="css"]  {
+    html, body, [class*="css"] {
         font-family: 'Montserrat', sans-serif;
-        background-color: #FFFFFF;
     }
 
-    /* Escondendo ferramentas padrão do Streamlit */
+    /* Esconde a interface padrão de aplicativo do Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
 
-    /* Configuração de Títulos e Textos */
-    h1 { color: #1A1A1A; font-weight: 600; letter-spacing: 2px; }
-    h2, h3 { color: #1A1A1A; font-weight: 400; margin-top: 1.5rem; }
-    p { color: #444; line-height: 1.6; }
-
-    /* Estilo Premium para Imagens e Galeria */
-    .stImage img {
-        border-radius: 4px;
-        transition: transform 0.3s ease;
-    }
-    .stImage img:hover {
-        transform: scale(1.02);
-    }
-    .stMarkdown div p { /* Legendas das imagens */
-        font-size: 0.9rem;
-        color: #666;
-        text-align: center;
-        margin-top: -10px;
-        padding-bottom: 1rem;
-    }
-
-    /* Botão Premium (WhatsApp) */
-    .stButton>button {
+    /* Botão elegante do WhatsApp */
+    .btn-contato {
+        display: block;
         background-color: #1A1A1A;
-        color: #FFFFFF;
-        border: 1px solid #1A1A1A;
-        border-radius: 2px;
-        padding: 12px 24px;
+        color: #FFFFFF !important;
+        text-align: center;
+        padding: 15px 20px;
+        text-decoration: none;
         font-weight: 600;
         letter-spacing: 1px;
-        transition: all 0.3s ease 0s;
-        width: 100%;
+        border-radius: 4px;
+        margin-top: 20px;
+        transition: 0.3s;
     }
-    .stButton>button:hover {
-        background-color: #FFFFFF;
-        color: #1A1A1A;
-        border: 1px solid #1A1A1A;
+    .btn-contato:hover {
+        background-color: #333333;
+        transform: translateY(-2px);
     }
-
-    /* ========================================= */
-    /* === REGRAS DE RESPONSIVIDADE (CELULAR) === */
-    /* ========================================= */
     
-    /* Quando a tela for menor que 768px (maioria dos celulares) */
-    @media (max-width: 767px) {
-        /* Força as colunas (stHorizontalBlock) a se empilharem */
-        div[data-testid="stHorizontalBlock"] {
-            display: flex;
-            flex-direction: column !important;
-        }
-        
-        /* Garante que cada elemento dentro da coluna ocupe 100% da largura */
-        div[data-testid="stHorizontalBlock"] > div {
-            width: 100% !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-bottom: 1rem;
-        }
-
-        /* Ajusta o tamanho do título principal no celular */
-        h1 {
-            font-size: 2.2rem !important;
-            text-align: center;
-        }
-        .subtitle {
-            font-size: 1rem !important;
-            text-align: center;
-        }
-    }
+    /* Ajuste de textos */
+    .titulo { text-align: center; font-weight: 600; font-size: 2.8rem; color: #111; margin-bottom: 0; padding-bottom: 0; }
+    .subtitulo { text-align: center; font-weight: 300; font-size: 1.1rem; color: #666; margin-top: 5px; }
+    .legenda { font-size: 0.85rem; color: #777; margin-top: -10px; margin-bottom: 20px; text-align: center; display: block; }
+    .nome-projeto { font-size: 1rem; font-weight: 600; color: #222; text-align: center; margin-bottom: 0; display: block; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER / TOPO DO SITE ---
-st.markdown("<h1 style='text-align: center; font-size: 3.5rem; margin-bottom:0;'>PALLADIUM STUDIO</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subtitle' style='text-align: center; font-size: 1.2rem; color: #666; font-weight: 300; margin-top:0;'>VISUALIZAÇÃO 3D ESPECIALIZADA EM MÓVEIS PLANEJADOS</p>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
+# --- HEADER ---
+st.markdown("<div class='titulo'>PALLADIUM STUDIO</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitulo'>Visualização 3D de Alto Padrão para Móveis Planejados</div>", unsafe_allow_html=True)
+st.write("---")
 
-# --- GALERIA ESPECIALIZADA EM MARCENARIA (6 Projetos) ---
-st.header("🖼️ Portfólio de Projetos Planejados")
-st.write("Renders de alta fidelidade que valorizam o detalhamento da marcenaria e texturas reais.")
-st.markdown("<br>", unsafe_allow_html=True)
+# --- GALERIA RESPONSIVA ---
+# O Streamlit automaticamente coloca lado a lado no PC e empilha no Celular
+col1, col2, col3 = st.columns(3)
 
-# Lembrete: Para usar suas próprias imagens, suba os arquivos (.jpg) no mesmo repositório do GitHub
-# E substitua o link abaixo pelo nome do arquivo: st.image("sua_cozinha.jpg")
-
-# LINHA 1 DA GALERIA
-col1, col2 = st.columns(2)
 with col1:
-    st.image("https://images.unsplash.com/photo-1599619369931-6e3e57088b39?q=80&w=1200&auto=format&fit=crop", 
-             caption="Cozinha Planejada Minimalista - Textura Amadeirada e LED")
+    st.image("https://images.unsplash.com/photo-1599619369931-6e3e57088b39?q=80&w=800&auto=format&fit=crop", use_container_width=True)
+    st.markdown("<span class='nome-projeto'>Cozinha Minimalista</span>", unsafe_allow_html=True)
+    st.markdown("<span class='legenda'>MDF Amadeirado e Iluminação LED</span>", unsafe_allow_html=True)
+    
+    st.image("https://images.unsplash.com/photo-1618219985960-496e579bd66c?q=80&w=800&auto=format&fit=crop", use_container_width=True)
+    st.markdown("<span class='nome-projeto'>Home Theater</span>", unsafe_allow_html=True)
+    st.markdown("<span class='legenda'>Detalhes em Laca Premium</span>", unsafe_allow_html=True)
+
 with col2:
-    st.image("https://images.unsplash.com/photo-1618219944342-824e40a13285?q=80&w=1200&auto=format&fit=crop", 
-             caption="Suíte Master - Painel Ripado e Closet Integrado")
+    st.image("https://images.unsplash.com/photo-1618219944342-824e40a13285?q=80&w=800&auto=format&fit=crop", use_container_width=True)
+    st.markdown("<span class='nome-projeto'>Suíte Master</span>", unsafe_allow_html=True)
+    st.markdown("<span class='legenda'>Painel Ripado e Cabeceira</span>", unsafe_allow_html=True)
+    
+    st.image("https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?q=80&w=800&auto=format&fit=crop", use_container_width=True)
+    st.markdown("<span class='nome-projeto'>Área Gourmet</span>", unsafe_allow_html=True)
+    st.markdown("<span class='legenda'>Integração com Marcenaria Externa</span>", unsafe_allow_html=True)
 
-# LINHA 2 DA GALERIA
-col3, col4 = st.columns(2)
 with col3:
-    st.image("https://images.unsplash.com/photo-1618219985960-496e579bd66c?q=80&w=1200&auto=format&fit=crop", 
-             caption="Home Theater - Detalhes em Laca e Vidro Reflecta")
-with col4:
-    st.image("https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?q=80&w=1200&auto=format&fit=crop", 
-             caption="Área Gourmet Planejada - Integração com Churrasqueira")
-
-# LINHA 3 DA GALERIA
-col5, col6 = st.columns(2)
-with col5:
-    st.image("https://images.unsplash.com/photo-1618219961917-d266e76d9101?q=80&w=1200&auto=format&fit=crop", 
-             caption="Escritório Home Office - Marcenaria Funcional")
-with col6:
-    st.image("https://images.unsplash.com/photo-1603912975949-c1e1e0a29363?q=80&w=1200&auto=format&fit=crop", 
-             caption="Banheiro Premium - Gabinete Planejado e Cubas Esculpidas")
-
-st.markdown("<br><hr><br>", unsafe_allow_html=True)
-
-# --- SEÇÃO DE DIFERENCIAL E CONTATO ---
-col_texto, col_botao = st.columns([2, 1])
-
-with col_texto:
-    st.subheader("Entendemos a Linguagem da Marcenaria")
-    st.write("""
-    Nós sabemos que um render para marceneiro precisa mostrar mais do que 'ambiente bonito'. 
-    Focamos no realismo das **texturas reais dos catálogos** (Arauco, Guararapes, Duratex), na 
-    **proporção correta** dos móveis e no detalhamento que ajuda seu cliente final a aprovar o projeto 
-    sem dúvidas. Aumente seu índice de fechamento de contratos com Palladium Studio.
-    """)
-
-with col_botao:
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.write("📍 **Base:** Ourinhos - SP")
-    st.write("📱 **WhatsApp:** (14) 99840-5046")
+    st.image("https://images.unsplash.com/photo-1618219961917-d266e76d9101?q=80&w=800&auto=format&fit=crop", use_container_width=True)
+    st.markdown("<span class='nome-projeto'>Home Office</span>", unsafe_allow_html=True)
+    st.markdown("<span class='legenda'>Espaço Corporativo Funcional</span>", unsafe_allow_html=True)
     
-    # Criando o link direto para o seu WhatsApp com uma mensagem pré-pronta
+    st.image("https://images.unsplash.com/photo-1603912975949-c1e1e0a29363?q=80&w=800&auto=format&fit=crop", use_container_width=True)
+    st.markdown("<span class='nome-projeto'>Banheiro Premium</span>", unsafe_allow_html=True)
+    st.markdown("<span class='legenda'>Gabinete em Acabamento Realista</span>", unsafe_allow_html=True)
+
+st.write("---")
+
+# --- ÁREA DE CONVERSÃO E CONTATO ---
+st.markdown("<h3 style='text-align: center; color: #111;'>Apresente seus projetos com a qualidade que eles merecem.</h3>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #555; max-width: 800px; margin: 0 auto;'>Entendemos de chapas, encaixes e da linguagem técnica da marcenaria. Usamos texturas dos catálogos originais (Guararapes, Arauco) para o seu cliente aprovar mais rápido e sem dúvidas.</p>", unsafe_allow_html=True)
+
+# Centraliza o botão no desktop e deixa do tamanho certo no mobile
+_, col_btn, _ = st.columns([1, 2, 1])
+
+with col_btn:
     link_wpp = "https://wa.me/5514998405046?text=Ol%C3%A1!%20Vi%20o%20portf%C3%B3lio%20do%20Palladium%20Studio%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento."
-    
-    # Estilizando o link para parecer o mesmo botão premium
-    st.markdown(f"""
-        <a href="{link_wpp}" target="_blank" style="text-decoration: none;">
-            <div style="background-color: #1A1A1A; color: white; text-align: center; padding: 12px 24px; border-radius: 2px; font-weight: 600; letter-spacing: 1px; width: 100%;">
-                SOLICITAR ORÇAMENTO
-            </div>
-        </a>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<a href="{link_wpp}" target="_blank" class="btn-contato">SOLICITAR ORÇAMENTO</a>', unsafe_allow_html=True)
 
-st.markdown("<br><br><br><center><p style='color: #999; font-size: 0.8rem;'>PALLADIUM STUDIO © 2026 | Visualização 3D para Móveis Planejados</p></center>", unsafe_allow_html=True)
+st.markdown("<br><br><p style='text-align: center; font-size: 12px; color: gray;'>Palladium Studio © 2026 | Ourinhos - SP</p>", unsafe_allow_html=True)
